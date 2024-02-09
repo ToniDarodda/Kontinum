@@ -1,5 +1,6 @@
 package com.kontinum.model
 
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Table
 
 object Stocks : Table() {
@@ -16,3 +17,6 @@ object Stocks : Table() {
         uniqueIndex("cocktailId", cocktailId)
     }
 }
+
+@Serializable
+data class Stock(val id: Int, val capacity: Int, val cocktailId: Int)

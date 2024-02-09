@@ -2,6 +2,7 @@ package com.kontinum
 
 import com.kontinum.database.DatabaseSingleton
 import com.kontinum.repository.CocktailRepositoryImpl
+import com.kontinum.repository.StockRepository
 import com.kontinum.repository.UserRepositoryImpl
 import com.kontinum.routing.core.cocktailRouting
 import com.kontinum.routing.configureRouting
@@ -13,6 +14,7 @@ import com.kontinum.routing.core.purchase.purchaseRouting
 import com.kontinum.routing.core.stocksRouting
 import com.kontinum.routing.core.userRouting
 import com.kontinum.service.cocktail.CocktailService
+import com.kontinum.service.stock.StockService
 import com.kontinum.service.user.UserService
 import com.kontinum.util.contentNegotiation
 import io.ktor.server.engine.*
@@ -27,11 +29,14 @@ fun main() {
         val cocktailService = CocktailService()
         val cocktailRepository = CocktailRepositoryImpl(cocktailService)
 
+        val stockService = StockService()
+        val stockRepository = StockRepository(stockService)
+
         contentNegotiation()
         configureRouting()
         userRouting(userRepository)
         cocktailRouting(cocktailRepository)
-        stocksRouting()
+        stocksRouting(stockRepository)
         discountRouting()
         purchaseRouting()
         purchaseDetail()
