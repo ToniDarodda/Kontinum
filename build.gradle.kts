@@ -12,7 +12,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.22"
 }
 
-group = "com.kontinuum"
+group = "com.kontinuum.main"
 version = "0.0.1"
 
 application {
