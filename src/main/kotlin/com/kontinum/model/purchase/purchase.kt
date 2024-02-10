@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 object Purchases : Table() {
     val id = integer("id").autoIncrement()
 
-    val userId = reference("userId", Users.id)
+    val userId = integer("userId").references(Users.id, onDelete = null)
 
     val purchaseTime = datetime("purchaseTime").default(LocalDateTime.now())
 

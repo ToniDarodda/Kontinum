@@ -15,7 +15,8 @@ class UserService : UserInterface {
         id = row[Users.id],
         firstName = row[Users.firstName],
         lastName = row[Users.lastName],
-        email = row[Users.email]
+        email = row[Users.email],
+        businessId = row[Users.businessId]
     )
 
     override suspend fun createUser(data: UserCreateDTO): User? {
@@ -31,6 +32,7 @@ class UserService : UserInterface {
                 it[lastName] = data.lastName
                 it[email] = data.email
                 it[password] = data.password
+                it[businessId] = data.businessId
             }
 
             insertedUser.resultedValues?.singleOrNull()?.let(::resultRowToUser)

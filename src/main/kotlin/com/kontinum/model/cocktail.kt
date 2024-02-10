@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.Table
 object Cocktails : Table() {
     val id = integer("id").autoIncrement()
 
-    val name = varchar("name", 255).uniqueIndex()
+    val name = varchar("name", 255)
 
     val pricePerServing = integer("pricePerServing")
 
