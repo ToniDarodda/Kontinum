@@ -11,6 +11,8 @@ import com.kontinum.routing.core.purchase.purchaseRouting
 import com.kontinum.service.business.BusinessService
 import com.kontinum.service.cocktail.CocktailService
 import com.kontinum.service.discount.DiscountService
+import com.kontinum.service.purchase.PurchaseService
+import com.kontinum.service.purchaseDetail.PurchaseDetailsService
 import com.kontinum.service.stock.StockService
 import com.kontinum.service.user.UserService
 import com.kontinum.util.contentNegotiation
@@ -36,15 +38,22 @@ fun main() {
         val discountService = DiscountService()
         val discountRepository = DiscountRepository(discountService)
 
+        val purchaseService = PurchaseService()
+        val purchaseRepository = PurchaseRepository(purchaseService)
+
+        val purchaseDetailService = PurchaseDetailsService()
+        val purchaseDetailRepository = PurchaseDetailRepository(purchaseDetailService)
+
         contentNegotiation()
         configureRouting()
+
         businessRouting(businessRepository)
         userRouting(userRepository)
         cocktailRouting(cocktailRepository)
         stocksRouting(stockRepository)
         discountRouting(discountRepository)
-        purchaseRouting()
-        purchaseDetail()
+        purchaseRouting(purchaseRepository)
+        purchaseDetail(purchaseDetailRepository)
         leaderboardRouting()
         leaderboardDetailRouting()
     }.start(wait = true)
