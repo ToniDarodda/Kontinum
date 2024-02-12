@@ -36,10 +36,6 @@ fun Application.businessRouting(businessRepository: BusinessRepository) {
                 if (createdBusiness != null) {
                     call.respond(createdBusiness)
                 }
-//                if (createdBusiness != null) {
-//                    call.respond(createdBusiness)
-//                }
-//
                 call.respond(HttpStatusCode.BadRequest,"Error in payload sent to create a business!")
             }
 
