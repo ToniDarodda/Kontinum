@@ -18,7 +18,6 @@ fun Application.userRouting(userRepository: UserRepositoryImpl) {
             authenticate("auth-jwt") {
 
                 post() {
-                    val principal = call.principal<JWTPrincipal>()
                     val params = call.receive<UserCreateDTO>()
                     val createdUser = userRepository.registerUser(params)
 
