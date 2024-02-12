@@ -8,21 +8,27 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 
 fun Application.userRouting(userRepository: UserRepositoryImpl) {
     routing {
         route("/user") {
 
-            post() {
-                val params = call.receive<UserCreateDTO>()
-                val createdUser = userRepository.registerUser(params)
+            authenticate("auth-jwt") {
+
+                post() {
+                    val principal = call.principal<JWTPrincipal>()
+                    val params = call.receive<UserCreateDTO>()
+                    val createdUser = userRepository.registerUser(params)
 
 
-                if (createdUser != null) {
-                    call.respond(createdUser)
+                    if (createdUser != null) {
+                        call.respond(createdUser)
+                    }
+
+                    call.respond(HttpStatusCode.Conflict,"Email already used!")
                 }
-
-                call.respond(HttpStatusCode.Conflict,"Email already used!")
             }
 
             patch("/{id?}") {

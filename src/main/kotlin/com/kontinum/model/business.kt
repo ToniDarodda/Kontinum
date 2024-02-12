@@ -11,6 +11,7 @@ object Business : Table() {
     val businessLegalInformation = varchar("businessLegalInformation", 255)
     val businessPhoneNumber = varchar("businessPhoneNumber", 15)
     val businessEmail = varchar("businessEmail", 255)
+    val password = varchar("password", 255)
 
     override val primaryKey = PrimaryKey(id)
 
@@ -20,4 +21,4 @@ object Business : Table() {
 }
 
 @Serializable
-data class BusinessData(val id: Int, val businessName: String, val businessLocation: String, val businessLegalInformation: String, val businessPhoneNumber: String, val businessEmail: String)
+data class BusinessData(val id: Int, val businessName: String, val businessLocation: String, val businessLegalInformation: String, val businessPhoneNumber: String, val businessEmail: String, val password: String)

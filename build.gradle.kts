@@ -29,6 +29,12 @@ repositories {
 dependencies {
     implementation("io.ktor:ktor-server-core-jvm")
 
+    implementation("at.favre.lib:bcrypt:0.9.0")
+
+
+    implementation("io.ktor:ktor-server-auth:$ktor_version")
+    implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
+
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
 

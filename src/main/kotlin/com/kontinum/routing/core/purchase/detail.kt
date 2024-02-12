@@ -2,7 +2,6 @@ package com.kontinum.routing.core.purchase
 
 import com.kontinum.repository.PurchaseDetailRepository
 import com.kontinum.service.purchaseDetail.dto.PurchaseDetailsCreateDTO
-import com.kontinum.service.purchaseDetail.dto.PurchaseDetailsPatchDTO
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
