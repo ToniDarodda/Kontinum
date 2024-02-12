@@ -3,6 +3,7 @@ package com.kontinum.routing.core
 
 import com.kontinum.repository.BusinessRepository
 import com.kontinum.service.business.dto.BusinessCreateDTO
+import com.kontinum.service.business.dto.BusinessGetDTO
 import com.kontinum.service.business.dto.BusinessPatchDTO
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -14,7 +15,7 @@ fun Application.businessRouting(businessRepository: BusinessRepository) {
     routing {
         route("/business") {
 
-            post() {
+            post("/register") {
                 val params = call.receive<BusinessCreateDTO>()
                 val createdBusiness = businessRepository.createBusiness(params)
 
@@ -23,6 +24,18 @@ fun Application.businessRouting(businessRepository: BusinessRepository) {
                     call.respond(createdBusiness)
                 }
 
+                call.respond(HttpStatusCode.BadRequest,"Error in payload sent to create a business!")
+            }
+
+            post("/login") {
+                val params = call.receive<BusinessGetDTO>()
+                println("ici1")
+                val createdBusiness = businessRepository.loginBusiness(params)
+
+
+                if (createdBusiness != null) {
+                    call.respond(createdBusiness)
+                }
                 call.respond(HttpStatusCode.BadRequest,"Error in payload sent to create a business!")
             }
 
@@ -36,7 +49,7 @@ fun Application.businessRouting(businessRepository: BusinessRepository) {
                     call.respond(patchedUser)
                 }
 
-                call.respond(HttpStatusCode.NotFound, "BusinessId not found!")
+                call.respond(HttpStatusCode.NotFound, "BusinessId not found: $param")
             }
 
             get("/{id}") {
@@ -48,7 +61,7 @@ fun Application.businessRouting(businessRepository: BusinessRepository) {
                     val retrievedBusiness = businessRepository.getBusiness(params)
                     if (retrievedBusiness != null) call.respond(retrievedBusiness)
                 }
-                call.respond(HttpStatusCode.NotFound, "BusinessId does not exist!")
+                call.respond(HttpStatusCode.NotFound, "BusinessId does not exist: $params")
             }
 
             delete("/{id?}") {

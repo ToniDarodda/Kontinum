@@ -1,6 +1,7 @@
 package com.kontinum.model.purchase
 
 import com.kontinum.model.Cocktails
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 
@@ -15,3 +16,6 @@ object PurchaseDetails : Table() {
 
     override val primaryKey = PrimaryKey(id)
 }
+
+@Serializable
+data class PurchaseDetail(val id: Int, val purchaseId: Int, val cocktailId: Int, val purchasePrice: Int)
