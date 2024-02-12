@@ -46,8 +46,6 @@ fun Application.purchaseDetail(purchaseDetailRepository: PurchaseDetailRepositor
                     )
                 }
 
-                println("test")
-                println(retrievedPurchaseDetail)
 
                 if (retrievedPurchaseDetail != null) {
                     call.respond(retrievedPurchaseDetail)
