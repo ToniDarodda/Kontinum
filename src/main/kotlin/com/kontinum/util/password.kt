@@ -9,5 +9,5 @@ fun hashPassword(password: String): String {
 fun checkPassword(hashedPassword: String, plainTextPassword: String): Boolean {
     val plainTextPasswordHashed = BCrypt.withDefaults().hashToString(12, plainTextPassword.toCharArray())
 
-    return hashedPassword == plainTextPassword
+    return hashedPassword == plainTextPasswordHashed
 }
