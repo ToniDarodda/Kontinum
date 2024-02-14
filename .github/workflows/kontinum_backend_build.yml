@@ -1,4 +1,4 @@
-name: Kotlin CI
+name: kontinum_backend_build
 
 on:
   push:
