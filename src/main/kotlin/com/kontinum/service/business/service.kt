@@ -40,21 +40,22 @@ class BusinessService : BusinessInterface {
         }
     }
 
-    suspend fun loginBusiness(data: BusinessGetDTO): String? {
+    override suspend fun loginBusiness(data: BusinessGetDTO): String? {
 
-        val retrievedUser = transaction {
-            Business.selectAll().where { Business.businessEmail eq data.mail }.singleOrNull()?.let(::rowToBusiness)
+        val businessUser = transaction {
+            val retrievedUser = Business.selectAll().where { Business.businessEmail eq data.mail }
+            retrievedUser.singleOrNull()?.let(::rowToBusiness)
         }
 
-        if (retrievedUser == null) {
+        if (businessUser == null) {
             return null
         }
 
-        if (checkPassword(retrievedUser.password, data.password)) {
+        if (!checkPassword(businessUser.password, data.password)) {
             return null
         }
 
-        val token = generateToken(audience, issuer, retrievedUser.id, secret)
+        val token = generateToken(audience, issuer, businessUser.id, secret)
 
         return token
     }

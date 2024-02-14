@@ -7,7 +7,8 @@ fun hashPassword(password: String): String {
 }
 
 fun checkPassword(hashedPassword: String, plainTextPassword: String): Boolean {
-    val plainTextPasswordHashed = BCrypt.withDefaults().hashToString(12, plainTextPassword.toCharArray())
+    val verifier = BCrypt.verifyer()
+    val result = verifier.verify(plainTextPassword.toCharArray(), hashedPassword)
 
-    return hashedPassword == plainTextPassword
+    return result.verified
 }

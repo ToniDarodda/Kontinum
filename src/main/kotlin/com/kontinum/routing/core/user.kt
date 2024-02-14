@@ -9,10 +9,11 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
 
 fun Application.userRouting(userRepository: UserRepositoryImpl) {
+
     routing {
+
         route("/user") {
 
             authenticate("auth-jwt") {
@@ -21,57 +22,56 @@ fun Application.userRouting(userRepository: UserRepositoryImpl) {
                     val params = call.receive<UserCreateDTO>()
                     val createdUser = userRepository.registerUser(params)
 
-
                     if (createdUser != null) {
                         call.respond(createdUser)
                     }
 
                     call.respond(HttpStatusCode.Conflict,"Email already used!")
                 }
-            }
 
-            patch("/{id?}") {
-                val paramId = call.parameters["id"]?.toInt()
-                val param = call.receive<UserPatchDTO>()
+                patch("/{id?}") {
+                    val paramId = call.parameters["id"]?.toInt()
+                    val param = call.receive<UserPatchDTO>()
 
-                if (paramId != null) {
-                    val patchedUser = userRepository.patchUserById(paramId, param)
+                    if (paramId != null) {
+                        val patchedUser = userRepository.patchUserById(paramId, param)
 
-                    call.respond(patchedUser)
+                        call.respond(patchedUser)
+                    }
+
+                    call.respond(HttpStatusCode.NotFound, "UserId not found!")
                 }
 
-                call.respond(HttpStatusCode.NotFound, "UserId not found!")
-            }
+                get() {
+                    val retrievedUsers = userRepository.getAllUSer()
 
-            get() {
-                val retrievedUsers = userRepository.getAllUSer()
-
-                call.respond(retrievedUsers)
-            }
-
-            get("/{id}") {
-                val params = call.parameters["id"]?.toInt()
-
-                if (params == null) {
-                    call.respondText("Missing userId")
-                } else {
-                    val retrievedUser = userRepository.getUserById(params)
-                    if (retrievedUser != null) call.respond(retrievedUser)
+                    call.respond(retrievedUsers)
                 }
-                call.respond(HttpStatusCode.NotFound, "UserId does not exist!")
-            }
 
-            delete("/{id?}") {
-                val params = call.parameters["id"]?.toInt()
+                get("/{id}") {
+                    val params = call.parameters["id"]?.toInt()
 
-                if (params == null) {
-                    call.respondText("Missing userId")
-                } else {
-                    userRepository.deleteUserById(params)
-                    call.respondText("User deleted successfully!")
+                    if (params == null) {
+                        call.respondText("Missing userId")
+                    } else {
+                        val retrievedUser = userRepository.getUserById(params)
+                        if (retrievedUser != null) call.respond(retrievedUser)
+                    }
+                    call.respond(HttpStatusCode.NotFound, "UserId does not exist!")
                 }
+
+                delete("/{id?}") {
+                    val params = call.parameters["id"]?.toInt()
+
+                    if (params == null) {
+                        call.respondText("Missing userId")
+                    } else {
+                        userRepository.deleteUserById(params)
+                        call.respondText("User deleted successfully!")
+                    }
+                }
+
             }
         }
-
     }
 }

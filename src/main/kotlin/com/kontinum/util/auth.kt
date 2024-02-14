@@ -27,7 +27,7 @@ fun Application.auth() {
                 .build()
             )
 
-            challenge { defaultScheme, realm ->
+            challenge { _, _ ->
                 call.respond(HttpStatusCode.Unauthorized, "Token is invalid or has expired!")
             }
 
