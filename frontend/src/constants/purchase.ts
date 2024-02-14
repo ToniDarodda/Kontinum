@@ -1,0 +1,1 @@
+export const BasePurchase: string = "/purchase"
