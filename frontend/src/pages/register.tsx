@@ -15,6 +15,7 @@ interface RegisterInterface {
 
 }
 
+// eslint-disable-next-line no-empty-pattern
 export function Register({}: RegisterInterface) {
     return (
         <>
