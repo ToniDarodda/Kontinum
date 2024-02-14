@@ -1,13 +1,18 @@
 import React from 'react';
 
-import { ChakraProvider } from '@chakra-ui/react'
+import { Register } from "./pages";
 
+import { ThemeProvider } from "styled-components";
 
-function App() {
+const theme = {
+    color: "#ffffff"
+}
+
+function App(): JSX.Element {
   return (
-    <ChakraProvider>
-      <></>
-    </ChakraProvider>
+      <ThemeProvider theme={theme}>
+        <Register />
+      </ThemeProvider>
   )
 }
 
