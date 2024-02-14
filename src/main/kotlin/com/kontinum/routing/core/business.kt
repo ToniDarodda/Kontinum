@@ -16,7 +16,6 @@ fun Application.businessRouting(businessRepository: BusinessRepository) {
     routing {
         route("/business") {
 
-            authenticate("auth-jwt") {
 
                 post("/register") {
                     val params = call.receive<BusinessCreateDTO>()
@@ -39,9 +38,10 @@ fun Application.businessRouting(businessRepository: BusinessRepository) {
                     if (createdBusiness != null) {
                         call.respond(createdBusiness)
                     }
-                    call.respond(HttpStatusCode.BadRequest,"Error in payload sent to create a business!")
+                    call.respond(HttpStatusCode.BadRequest,"Credentials invalid!")
                 }
 
+            authenticate("auth-jwt") {
                 patch("/{id?}") {
                     val paramId = call.parameters["id"]?.toInt()
                     val param = call.receive<BusinessPatchDTO>()
