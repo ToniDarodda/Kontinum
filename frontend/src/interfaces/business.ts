@@ -10,7 +10,11 @@ interface BaseBusinessInterface {
     readonly password: string;
 }
 
+export type BusinessType = Omit<BaseBusinessInterface, 'password'>;
+
 export type CreateBusinessType = Omit<BaseBusinessInterface, 'id'>
+
+export type LoginBusinessType = Pick<BaseBusinessInterface, 'businessEmail' | 'password'>
 
 export type GetBusinessType = Pick<BaseBusinessInterface, 'id' | 'businessEmail'>
 

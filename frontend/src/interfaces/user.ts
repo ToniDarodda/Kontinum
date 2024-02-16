@@ -9,6 +9,8 @@ interface BaseUserInterface {
     readonly businessId: string;
 }
 
+export type UserType = Omit<BaseUserInterface, 'password'>
+
 export type CreateUserType = Omit<BaseUserInterface, 'id'>
 
 export type GetUserType = Pick<BaseUserInterface, 'id'>
