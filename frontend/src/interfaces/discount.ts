@@ -7,6 +7,8 @@ interface BaseDiscountInterface {
     readonly businessId: string;
 }
 
+export type DiscountType = BaseDiscountInterface;
+
 export type CreateDiscountType = Omit<BaseDiscountInterface, 'id'>
 
 export type GetDiscountType = Pick<BaseDiscountInterface, 'id'>

@@ -7,6 +7,8 @@ interface BasePurchaseInterface {
     readonly totalPrice: number;
 }
 
+export type PurchaseType = BasePurchaseInterface;
+
 export type CreatePurchaseType = Omit<BasePurchaseInterface, 'id'>
 
 export type GetPurchaseType = Pick<BasePurchaseInterface, 'id'>

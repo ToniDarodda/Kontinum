@@ -26,7 +26,7 @@ const queryClient = new QueryClient({
     }
 });
 
-function App(): JSX.Element {
+function App(): React.ReactElement {
   return (
       <ThemeProvider theme={theme}>
           <QueryClientProvider client={queryClient}>

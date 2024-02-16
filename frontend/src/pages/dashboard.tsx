@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import React from "react";
 
 const Title = styled.h1`
   font-size: 1.5em;
@@ -11,7 +12,7 @@ const Wrapper = styled.section`
   background: papayawhip;
 `;
 
-export default function Register() {
+export default function Dashboard(): React.ReactElement {
     return (
         <>
             <Wrapper>
