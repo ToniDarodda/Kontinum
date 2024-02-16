@@ -82,11 +82,6 @@ fun Application.businessRouting(businessRepository: BusinessRepository) {
                 delete("/{id?}") {
 
                     val params = call.parameters["id"]?.toInt()
-                    val cookie = call.request.cookies["Authorization"]
-
-                    println("ICI")
-                    println(cookie)
-                    println("ICI2")
 
                     if (params == null) {
                         call.respondText("Missing BusinessId!")
