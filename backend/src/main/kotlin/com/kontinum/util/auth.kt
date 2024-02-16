@@ -2,42 +2,43 @@ package com.kontinum.util
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import io.ktor.http.*
+import io.ktor.http.auth.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.response.*
 
 fun Application.auth() {
-
     val secret = "Z+MU@YqP+jwXVf&jQ&U#((q7V5tWc(a^n6H)7MVUNDdaNp7QeUHd^)@hCLSW+"
-    val issuer = "auth-service@kontinum.com"
+    val issuer = "http://localhost:8080"
     val audience = "Kontinum"
-    val myRealm = "kbjwd12109f0f-fdwdp124jmwlpkd32"
+    val myRealm = "Kontinum"
 
     install(Authentication) {
         jwt("auth-jwt") {
-
             realm = myRealm
+            val jwtAlgorithm = Algorithm.HMAC256(secret)
+            verifier(JWT.require(jwtAlgorithm).withIssuer(issuer).build())
 
-            verifier(JWT
-                .require(Algorithm.HMAC256(secret))
-                .withAudience(audience)
-                .withIssuer(issuer)
-                .build()
-            )
+            authHeader { call ->
+                val cookieValue = call.request.cookies["Authorization"] ?: return@authHeader null
 
-            challenge { _, _ ->
-                call.respond(HttpStatusCode.Unauthorized, "Token is invalid or has expired!")
+                try {
+                    parseAuthorizationHeader("Bearer $cookieValue")
+                } catch (cause: IllegalArgumentException) {
+                    cause.message
+                    null
+                }
             }
 
             validate { credential ->
-                if (credential.payload.getClaim("userId").asString() != "") {
+                val userId = credential.payload.getClaim("userId").asInt()
+                if (userId != null && userId > 0) {
                     JWTPrincipal(credential.payload)
                 } else {
                     null
                 }
             }
+
 
         }
     }

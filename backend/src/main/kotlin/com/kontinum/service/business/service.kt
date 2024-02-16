@@ -15,7 +15,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class BusinessService : BusinessInterface {
 
     val secret = "Z+MU@YqP+jwXVf&jQ&U#((q7V5tWc(a^n6H)7MVUNDdaNp7QeUHd^)@hCLSW+"
-    val issuer = "auth-service@kontinum.com"
+    val issuer = "http://localhost:8080"
     val audience = "Kontinum"
     private fun rowToBusiness(row: ResultRow) = BusinessData(
         id = row[Business.id],
@@ -26,8 +26,8 @@ class BusinessService : BusinessInterface {
         businessLocation = row[Business.businessLocation],
         password = row[Business.password]
     )
-    override suspend fun createBusiness(data: BusinessCreateDTO): BusinessData? {
-        return transaction {
+    override suspend fun createBusiness(data: BusinessCreateDTO): String? {
+         val createdBusiness = transaction {
             val createdBusiness = Business.insert {
                 it[businessName] = data.businessName
                 it[businessEmail] = data.businessEmail
@@ -38,6 +38,10 @@ class BusinessService : BusinessInterface {
             }
             createdBusiness.resultedValues?.singleOrNull()?.let(::rowToBusiness)
         }
+
+        val token = createdBusiness?.let { generateToken(audience, issuer, it.id, secret) }
+
+        return token;
     }
 
     override suspend fun loginBusiness(data: BusinessGetDTO): String? {

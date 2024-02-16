@@ -7,7 +7,7 @@ import com.kontinum.service.business.dto.BusinessGetDTO
 import com.kontinum.service.business.dto.BusinessPatchDTO
 
 class BusinessRepository(private val businessService: BusinessService) {
-    suspend fun createBusiness(data: BusinessCreateDTO): BusinessData? {
+    suspend fun createBusiness(data: BusinessCreateDTO): String? {
         return this.businessService.createBusiness(data)
     }
 
