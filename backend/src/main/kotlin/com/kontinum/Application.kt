@@ -17,6 +17,7 @@ import com.kontinum.service.stock.StockService
 import com.kontinum.service.user.UserService
 import com.kontinum.util.auth
 import com.kontinum.util.contentNegotiation
+import com.kontinum.util.cors
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 
@@ -49,6 +50,7 @@ fun main() {
         val leaderboardServices = LeaderboardServices()
         val leaderboardRepository = LeaderboardRepository(leaderboardServices)
 
+        cors()
         auth()
         contentNegotiation()
         configureRouting()

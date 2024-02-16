@@ -16,14 +16,19 @@ fun Application.businessRouting(businessRepository: BusinessRepository) {
     routing {
         route("/business") {
 
-
                 post("/register") {
                     val params = call.receive<BusinessCreateDTO>()
-                    val createdBusiness = businessRepository.createBusiness(params)
+                    val token = businessRepository.createBusiness(params)
 
-
-                    if (createdBusiness != null) {
-                        call.respond(createdBusiness)
+                    if (token != null) {
+                        call.response.cookies.append(
+                            name = "Authorization",
+                            value = token,
+                            secure = false,
+                            httpOnly = true,
+                            path = "/"
+                        )
+                        call.respondText("Business created successfully")
                     }
 
                     call.respond(HttpStatusCode.BadRequest,"Error in payload sent to create a business!")
@@ -31,29 +36,23 @@ fun Application.businessRouting(businessRepository: BusinessRepository) {
 
                 post("/login") {
                     val params = call.receive<BusinessGetDTO>()
-                    println("ici1")
-                    val createdBusiness = businessRepository.loginBusiness(params)
+                    val token = businessRepository.loginBusiness(params)
 
-
-                    if (createdBusiness != null) {
-                        call.respond(createdBusiness)
+                    if (token != null) {
+                        call.response.cookies.append(
+                            name = "Authorization",
+                            value = token,
+                            secure = false,
+                            httpOnly = true,
+                            path = "/"
+                        )
+                        call.respondText(token)
                     }
                     call.respond(HttpStatusCode.BadRequest,"Credentials invalid!")
                 }
 
+
             authenticate("auth-jwt") {
-                patch("/{id?}") {
-                    val paramId = call.parameters["id"]?.toInt()
-                    val param = call.receive<BusinessPatchDTO>()
-
-                    if (paramId != null) {
-                        val patchedUser = businessRepository.patchBusiness(paramId, param)
-
-                        call.respond(patchedUser)
-                    }
-
-                    call.respond(HttpStatusCode.NotFound, "BusinessId not found: $param")
-                }
 
                 get("/{id}") {
                     val params = call.parameters["id"]?.toInt()
@@ -67,8 +66,27 @@ fun Application.businessRouting(businessRepository: BusinessRepository) {
                     call.respond(HttpStatusCode.NotFound, "BusinessId does not exist: $params")
                 }
 
+                patch("/{id?}") {
+                    val paramId = call.parameters["id"]?.toInt()
+                    val param = call.receive<BusinessPatchDTO>()
+
+                    if (paramId != null) {
+                        val patchedUser = businessRepository.patchBusiness(paramId, param)
+
+                        call.respond(patchedUser)
+                    }
+
+                    call.respond(HttpStatusCode.NotFound, "BusinessId not found: $param")
+                }
+
                 delete("/{id?}") {
+
                     val params = call.parameters["id"]?.toInt()
+                    val cookie = call.request.cookies["Authorization"]
+
+                    println("ICI")
+                    println(cookie)
+                    println("ICI2")
 
                     if (params == null) {
                         call.respondText("Missing BusinessId!")
@@ -80,6 +98,5 @@ fun Application.businessRouting(businessRepository: BusinessRepository) {
 
             }
         }
-
     }
 }

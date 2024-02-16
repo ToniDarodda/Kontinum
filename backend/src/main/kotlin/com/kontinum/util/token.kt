@@ -2,6 +2,7 @@ package com.kontinum.util
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.auth0.jwt.interfaces.DecodedJWT
 import java.util.*
 
 fun generateToken(audience: String, issuer: String, userId: Int, secret: String): String {

@@ -6,7 +6,7 @@ import com.kontinum.service.business.dto.BusinessGetDTO
 import com.kontinum.service.business.dto.BusinessPatchDTO
 
 interface BusinessInterface {
-    suspend fun createBusiness(data: BusinessCreateDTO): BusinessData?
+    suspend fun createBusiness(data: BusinessCreateDTO): String?
 
     suspend fun loginBusiness(data: BusinessGetDTO): String?
 
