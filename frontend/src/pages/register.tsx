@@ -1,15 +1,9 @@
-import styled from "styled-components";
+import { useForm, SubmitHandler } from "react-hook-form"
 
-const Title = styled.h1`
-  font-size: 1.5em;
-  text-align: center;
-  color: #BF4F74;
-`;
-
-const Wrapper = styled.section`
-  padding: 4em;
-  background: papayawhip;
-`;
+type Inputs = {
+    email: string
+    password: string
+}
 
 interface RegisterInterface {
 
@@ -17,11 +11,24 @@ interface RegisterInterface {
 
 // eslint-disable-next-line no-empty-pattern
 export function Register({}: RegisterInterface) {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<Inputs>()
+
+    const onSubmit: SubmitHandler<Inputs> = async (data) => {
+
+    }
+
     return (
         <>
-            <Wrapper>
-                <Title>Hey it works</Title>
-            </Wrapper>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <input defaultValue="test" {...register("email")} />
+                <input {...register("password", { required: true })} />
+                {errors.password && <span>This field is required</span>}
+                <input type="submit" />
+            </form>
         </>
     )
 }
