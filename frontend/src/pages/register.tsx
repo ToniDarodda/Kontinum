@@ -1,16 +1,16 @@
-import React, {useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {SubmitHandler, useForm} from "react-hook-form";
-import {toast} from "react-toastify";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { toast} from "react-toastify";
 
-import {ContainerRegister, KontinumDiv, MultiSubContainer} from "../global/global.style";
-import {RegisterFlow} from "../constants/pages/register";
-import {useCreateBusiness} from "../query";
-import {KontinumP, KontinumSignature, KontinumTitleH1, KontinumTitleH2} from "../components/title/title.style";
+import { ContainerRegister, KontinumDiv, MultiSubContainer } from "../global/global.style";
+import { RegisterFlow } from "../constants/pages/register";
+import { useCreateBusiness } from "../query";
+import { KontinumP, KontinumSignature, KontinumTitleH1, KontinumTitleH2 } from "../components/title/title.style";
 import { Image } from "../components";
-import {KontinumForm} from "../components/form/form";
-import {Input} from "../components/input/input";
-import {KontinumButton} from "../components/button/button.style";
+import { KontinumForm } from "../components/form/form";
+import { Input } from "../components/input/input";
+import { KontinumButton } from "../components/button/button.style";
 
 
 type Inputs = {

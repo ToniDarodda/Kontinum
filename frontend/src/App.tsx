@@ -6,7 +6,7 @@ import { ThemeProvider } from "styled-components";
 
 import { Dashboard, Register, Login } from "./pages";
 import { GlobalStyles } from "./global/global.style";
-import {ToastContainer} from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 const theme = {
     color: "#ffffff"
