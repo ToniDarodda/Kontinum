@@ -1,7 +1,7 @@
-import {CreateUserType, PatchUserType, UserType} from "../interfaces";
-import {Fetch} from "../utils";
+import { CreateUserType, PatchUserType, UserType } from "../interfaces";
+import { Fetch } from "../utils";
 
-export class UserService {
+class UserService {
     async createUser(userData: CreateUserType): Promise<UserType> {
         const { data: user}: { data: UserType } = await Fetch.post<UserType>('/user', userData)
 
@@ -12,6 +12,11 @@ export class UserService {
         const { data: user }: { data: UserType } = await Fetch.get<UserType>(`/user/${userId}`);
 
         return user;
+    }
+
+    async getAllUser(): Promise<UserType[]> {
+        const { data: users }: { data: UserType[] } = await Fetch.get<UserType[]>('/user')
+        return users;
     }
 
     async patchUser(userId: string, userData: PatchUserType): Promise<number> {
@@ -25,3 +30,5 @@ export class UserService {
     }
 
 }
+
+export const userService: UserService = new UserService();

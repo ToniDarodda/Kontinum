@@ -1,4 +1,5 @@
 import { useForm, SubmitHandler } from "react-hook-form"
+import React from "react";
 
 type Inputs = {
     email: string
@@ -10,7 +11,7 @@ interface RegisterInterface {
 }
 
 // eslint-disable-next-line no-empty-pattern
-export function Register({}: RegisterInterface) {
+export function Register({}: RegisterInterface): React.ReactElement {
     const {
         register,
         handleSubmit,
@@ -18,16 +19,15 @@ export function Register({}: RegisterInterface) {
     } = useForm<Inputs>()
 
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
-
     }
 
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <input defaultValue="test" {...register("email")} />
-                <input {...register("password", { required: true })} />
+                <input {...register("password", {required: true})} />
                 {errors.password && <span>This field is required</span>}
-                <input type="submit" />
+                <input type="submit"/>
             </form>
         </>
     )

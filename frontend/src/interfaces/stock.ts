@@ -6,6 +6,8 @@ interface BaseStockInterface {
     readonly cocktailId: string;
 }
 
+export type StockType = BaseStockInterface;
+
 export type CreateStockType = Omit<BaseStockInterface, 'id'>
 
 export type GetStockType = Pick<BaseStockInterface, 'id'>

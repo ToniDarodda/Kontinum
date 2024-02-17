@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { businessService } from "../services/business";
+
+import { businessService } from "../services"
 
 const MutationKeyCreateBusiness: string = 'CREATE_BUSINESS_KEY';
 const MutationKeyGetBusiness: string = 'GET_BUSINESS_KEY';

@@ -6,6 +6,8 @@ interface BaseCocktailInterface {
     readonly pricePerServing: string
 }
 
+export type CocktailType = BaseCocktailInterface;
+
 export type CreateCocktailType = Omit<BaseCocktailInterface, 'id'>
 
 export type GetCocktailType = Pick<BaseCocktailInterface, 'id'>

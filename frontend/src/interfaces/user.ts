@@ -6,7 +6,7 @@ interface BaseUserInterface {
     readonly lastName: string;
     readonly email: string;
     readonly password: string;
-    readonly businessId: string;
+    readonly businessId: number;
 }
 
 export type UserType = Omit<BaseUserInterface, 'password'>

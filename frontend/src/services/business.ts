@@ -1,7 +1,5 @@
-import {BusinessType, CreateBusinessType, LoginBusinessType, PatchBusinessType} from "../interfaces";
+import { BusinessType, CreateBusinessType, LoginBusinessType, PatchBusinessType } from "../interfaces";
 import { Fetch } from "../utils";
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
 
 class BusinessService {
     async createBusiness(businessData: CreateBusinessType): Promise<BusinessType> {
