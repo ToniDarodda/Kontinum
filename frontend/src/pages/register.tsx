@@ -1,34 +1,14 @@
-import { useForm, SubmitHandler } from "react-hook-form"
 import React from "react";
 
-type Inputs = {
-    email: string
-    password: string
-}
+import { Image } from "../components";
+import { RegisterInputManager } from "../components/business/register/register";
+import { KontinumDiv } from "../global/global.style";
 
-interface RegisterInterface {
-
-}
-
-// eslint-disable-next-line no-empty-pattern
-export function Register({}: RegisterInterface): React.ReactElement {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<Inputs>()
-
-    const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    }
-
+export function Register(): React.ReactElement {
     return (
-        <>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <input defaultValue="test" {...register("email")} />
-                <input {...register("password", {required: true})} />
-                {errors.password && <span>This field is required</span>}
-                <input type="submit"/>
-            </form>
-        </>
+        <KontinumDiv>
+            <Image />
+            <RegisterInputManager />
+        </KontinumDiv>
     )
 }

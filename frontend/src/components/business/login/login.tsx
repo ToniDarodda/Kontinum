@@ -1,0 +1,5 @@
+export function LoginRight() {
+    return (
+        <></>
+    )
+}

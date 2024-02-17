@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { businessService } from "../services"
+import {toast} from "react-toastify";
 
 const MutationKeyCreateBusiness: string = 'CREATE_BUSINESS_KEY';
 const MutationKeyGetBusiness: string = 'GET_BUSINESS_KEY';
@@ -11,7 +12,7 @@ const MutationKeyLoginBusiness: string = 'LOGIN_BUSINESS_KEY';
 export const useCreateBusiness = () => useMutation({
     mutationKey: [MutationKeyCreateBusiness],
     mutationFn: businessService.createBusiness,
-    onError: (error: Error) => console.log(error),
+    onError: (error: Error) => error
 });
 
 export const useLoginBusiness = () => useMutation({

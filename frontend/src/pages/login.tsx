@@ -12,12 +12,10 @@ const Wrapper = styled.section`
   background: papayawhip;
 `;
 
-export default function Login(): React.ReactElement {
+export function Login(): React.ReactElement {
     return (
-        <>
-            <Wrapper>
-                <Title>Hey it works</Title>
-            </Wrapper>
-        </>
+        <Wrapper>
+            <Title>Hey it works</Title>
+        </Wrapper>
     )
 }

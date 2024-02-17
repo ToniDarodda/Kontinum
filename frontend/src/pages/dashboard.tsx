@@ -12,12 +12,10 @@ const Wrapper = styled.section`
   background: papayawhip;
 `;
 
-export default function Dashboard(): React.ReactElement {
+export function Dashboard(): React.ReactElement {
     return (
-        <>
             <Wrapper>
                 <Title>Hey it works</Title>
             </Wrapper>
-        </>
     )
 }
