@@ -36,11 +36,13 @@ export const ContainerRegister = styled.div`
     align-items: center;
 `
 
-export const MultiSubContainer = styled.div<{ padding?: string }>`
+export const MultiSubContainer = styled.div<{ padding?: string, border?: string, justifyContent?: string, alignItems?: string, pl?: string, w?: string}>`
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    
+    width: ${props => props.w ? props.w : ''};
+    align-items: ${(props) => props.alignItems ? props.alignItems : 'center'};
+    justify-content: ${(props) => props.justifyContent ? props.justifyContent : 'center' };
     padding-top: ${(props) => props.padding ? props.padding : '0px'};
+    padding-left: ${(props) => props.pl ? props.pl : '0px'};
+    border-bottom: ${(props) => props.border ? props.border : ''}
 `
