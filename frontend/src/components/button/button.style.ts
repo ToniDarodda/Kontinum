@@ -14,4 +14,8 @@ export const KontinumButton = styled.button`
         opacity: 0.8;
         border: 1px solid #64B5F6;
     }
+    
+    @media (max-width: 600px) {
+        width: 90%;
+    }
 `;

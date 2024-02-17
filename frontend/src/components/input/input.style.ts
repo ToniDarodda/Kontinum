@@ -9,7 +9,7 @@ export const ContainerInput = styled.div`
     height: auto;
     
     @media (max-width: 600px) {
-        width: 100%;
+        width: 90%;
     }
 `
 
