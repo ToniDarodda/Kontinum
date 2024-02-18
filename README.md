@@ -49,6 +49,10 @@ The application will be accessible at `http://localhost:3000`.
 
 For a detailed look at the design aspects of Kontinum, check out our [Figma design file](https://www.figma.com/file/Q0DCDkYKprRKvmE4sW8nPJ/Kontinum?type=design&node-id=52%3A942&mode=design&t=WLhf4qDbIzP3CdRz-1).
 
+## Database Model
+
+To view the database model for Kontinum, visit our [Lucidchart diagram](https://lucid.app/lucidchart/bbcf10f0-ef71-4022-b5a7-eab1e8fb6033/edit?viewport_loc=-741%2C-54%2C3164%2C2033%2C0_0&invitationId=inv_5d063bf4-c444-418a-95e5-4f00340125ac).
+
 ## Features
 
 - **Inventory Management**: Real-time tracking of beverage stocks.
@@ -70,3 +74,5 @@ Contributions are welcome to help complete the frontend and enhance backend func
 ## License
 
 This project is distributed under the MIT License. See the `LICENSE` file for more information.
+
+---
