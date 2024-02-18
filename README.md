@@ -45,6 +45,10 @@ Follow these instructions to install and run Kontinum on your system.
 
 The application will be accessible at `http://localhost:3000`.
 
+## Design
+
+For a detailed look at the design aspects of Kontinum, check out our [Figma design file](https://www.figma.com/file/Q0DCDkYKprRKvmE4sW8nPJ/Kontinum?type=design&node-id=52%3A942&mode=design&t=WLhf4qDbIzP3CdRz-1).
+
 ## Features
 
 - **Inventory Management**: Real-time tracking of beverage stocks.
