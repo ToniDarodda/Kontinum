@@ -11,7 +11,7 @@ const MutationKeyLoginBusiness: string = 'LOGIN_BUSINESS_KEY';
 export const useCreateBusiness = () => useMutation({
     mutationKey: [MutationKeyCreateBusiness],
     mutationFn: businessService.createBusiness,
-    onError: (error: Error) => console.log(error),
+    onError: (error: Error) => error
 });
 
 export const useLoginBusiness = () => useMutation({
