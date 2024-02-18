@@ -16,7 +16,7 @@ Follow these instructions to install and run Kontinum on your system.
 
 1. Clone the repository and navigate to the backend directory:
    ```bash
-   git clone https://example.com/kontinum.git
+   git clone https://github.com/ToniDarodda/Kontinum.git
    cd kontinum/backend
    ```
 
