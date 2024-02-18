@@ -1,9 +1,9 @@
-import { InfoCard} from "./info.style";
-import { KontinumP } from "../title/title.style";
-import { MultiSubContainer } from "../../global/global.style";
-import {Wrapper} from "./card.style";
+import { InfoCard} from "../info/info.style";
+import { KontinumP } from "../../title/title.style";
+import { MultiSubContainer } from "../../../global/global.style";
+import {Wrapper} from "../card.style";
 import {useState} from "react";
-import { UserType} from "../../interfaces";
+import { UserType} from "../../../interfaces";
 import {LeaderboardInfo} from "./leaderboard.style";
 
 export function Leaderboard() {

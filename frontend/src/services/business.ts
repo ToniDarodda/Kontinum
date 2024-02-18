@@ -1,4 +1,4 @@
-import { BusinessType, CreateBusinessType, LoginBusinessType, PatchBusinessType } from "../interfaces";
+import {BusinessType, CreateBusinessType, LoginBusinessType, PatchBusinessType, UserType} from "../interfaces";
 import { Fetch } from "../utils";
 
 class BusinessService {
@@ -17,6 +17,12 @@ class BusinessService {
         const { data: business }: { data: BusinessType } = await Fetch.get<BusinessType>(`/business/${businessId}`)
 
         return business
+    }
+
+    async getBusinessUser(): Promise<UserType[]> {
+        const { data: users }: { data: UserType[]} = await Fetch.get<UserType[]>(`/business/users`);
+
+        return users;
     }
 
     async patchBusiness(businessData: PatchBusinessType): Promise<number> {

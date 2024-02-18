@@ -1,8 +1,9 @@
-import {MultiSubContainer} from "../../../global/global.style";
-import {NavigationButton} from "./navigation.style";
 import {useState} from "react";
-import {KontinumP} from "../../title/title.style";
 import {useNavigate} from "react-router-dom";
+
+import {MultiSubContainer} from "../../../global/global.style";
+import {NavigationButton, NavigationButtonLogOut} from "./navigation.style";
+import {KontinumP} from "../../title/title.style";
 
 
 export enum NavigationButtonOption {
@@ -12,7 +13,8 @@ export enum NavigationButtonOption {
     COCKTAIL = 'cocktail',
     DISCOUNT = 'discount',
     LEADERBOARD = 'leaderboard',
-    PROFILE = 'profile'
+    PROFILE = 'profile',
+    LOGOUT = 'logout'
 }
 
 interface NavigationManagerInterface {
@@ -33,7 +35,6 @@ export function NavigationManager({ defaultOption }: NavigationManagerInterface)
 
     return (
         <MultiSubContainer>
-
             <MultiSubContainer>
                 <NavigationButton isActive={isOptionActive(NavigationButtonOption.DASHBOARD)} onClick={() => optionChange(NavigationButtonOption.DASHBOARD)}>Dashboard</NavigationButton>
                 <NavigationButton isActive={isOptionActive(NavigationButtonOption.USERS)} onClick={() => optionChange(NavigationButtonOption.USERS)}>Users</NavigationButton>
@@ -43,10 +44,11 @@ export function NavigationManager({ defaultOption }: NavigationManagerInterface)
                 <NavigationButton isActive={isOptionActive(NavigationButtonOption.LEADERBOARD)} onClick={() => optionChange(NavigationButtonOption.LEADERBOARD)}>Leaderboard</NavigationButton>
             </MultiSubContainer>
             <MultiSubContainer w={'100%'} padding={'60px'} border={'1px solid #ffffff'} />
-                <MultiSubContainer justifyContent={'center'} alignItems={'flex-start'} pl={'12px'} padding={'10px'}>
-                    <KontinumP margin={'20px'} color={'#ffffff'} opacity={1} fs={'18px'}>Settings</KontinumP>
-                <NavigationButton isActive={isOptionActive(NavigationButtonOption.PROFILE)} onClick={() => optionChange(NavigationButtonOption.PROFILE)}>Profile</NavigationButton>
-            </MultiSubContainer>
+                <MultiSubContainer justifyContent={'center'} alignItems={'flex-start'} padding={'10px'}>
+                    <KontinumP margin={'8px'} color={'#ffffff'} opacity={1} fs={'18px'}>Settings</KontinumP>
+                    <NavigationButton isActive={isOptionActive(NavigationButtonOption.PROFILE)} onClick={() => optionChange(NavigationButtonOption.PROFILE)}>Profile</NavigationButton>
+                    <NavigationButtonLogOut isActive={false} onClick={() => navigate('/login')}>Log out</NavigationButtonLogOut>
+                </MultiSubContainer>
         </MultiSubContainer>
     )
 }

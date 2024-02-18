@@ -2,6 +2,7 @@ import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/re
 
 import { userService } from "../services";
 import { PatchUserType } from "../interfaces";
+import {MutationKeyGetBusinessUser} from "./business";
 
 const MutationKeyCreateUser: string = 'CREATE_USER_KEY';
 const MutationKeyGetUser: string = 'GET_USER_KEY';
@@ -14,9 +15,8 @@ export const useCreateUser = () => {
     return useMutation({
         mutationKey: [MutationKeyCreateUser],
         mutationFn: userService.createUser,
-        onSuccess: data => {
-            queryClient.setQueryData([MutationKeyGetAllUser, data.id], data)
-            queryClient.invalidateQueries({ queryKey: [MutationKeyGetAllUser]})
+        onSuccess: async data => {
+            await queryClient.invalidateQueries({queryKey: [MutationKeyGetAllUser]})
         }
     })
 }

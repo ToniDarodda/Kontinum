@@ -4,6 +4,7 @@ import { businessService } from "../services"
 
 const MutationKeyCreateBusiness: string = 'CREATE_BUSINESS_KEY';
 const MutationKeyGetBusiness: string = 'GET_BUSINESS_KEY';
+export const MutationKeyGetBusinessUser: string = 'GET_BUSINESS_USER_KEY';
 const MutationKeyPatchBusiness: string = 'PATCH_BUSINESS_KEY';
 const MutationKeyDeleteBusiness: string = 'DELETE_BUSINESS_KEY';
 const MutationKeyLoginBusiness: string = 'LOGIN_BUSINESS_KEY';
@@ -23,6 +24,11 @@ export const useGetBusiness = (id: string) => useQuery({
     queryKey: [MutationKeyGetBusiness, id],
     queryFn: () => businessService.getBusiness(id),
 });
+
+export const useGetBusinessUser = () => useQuery({
+    queryKey: [MutationKeyGetBusinessUser],
+    queryFn: businessService.getBusinessUser
+})
 
 export const usePatchBusiness = () => {
     const queryClient = useQueryClient();

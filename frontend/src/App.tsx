@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "styled-components";
 
-import {Dashboard, Register, Login, Users, Stock, Cocktail, Leaderboard, Discount} from "./pages";
+import {Dashboard, Register, Login, Users, Stock, Cocktail, Leaderboard, Discount, Profile} from "./pages";
 import { GlobalStyles } from "./global/global.style";
 import { ToastContainer } from "react-toastify";
 
@@ -44,6 +44,10 @@ const router = createBrowserRouter([
     {
         path: '/discount',
         element: <Discount />
+    },
+    {
+        path: '/profile',
+        element: <Profile />
     }
 ]);
 

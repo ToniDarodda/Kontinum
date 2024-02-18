@@ -11,7 +11,7 @@ interface BaseUserInterface {
 
 export type UserType = Omit<BaseUserInterface, 'password'>
 
-export type CreateUserType = Omit<BaseUserInterface, 'id'>
+export type CreateUserType = Omit<BaseUserInterface, 'id' | 'password' | 'businessId'>
 
 export type GetUserType = Pick<BaseUserInterface, 'id'>
 

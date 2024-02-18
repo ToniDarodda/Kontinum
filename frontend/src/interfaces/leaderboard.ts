@@ -6,6 +6,8 @@ interface BaseLeaderboardInterface {
     readonly endTime: Date
 }
 
+export type LeaderboardType = BaseLeaderboardInterface;
+
 export type CreateLeaderboardType = Omit<BaseLeaderboardInterface, 'id'>
 
 export type GetLeaderboardType = Pick<BaseLeaderboardInterface, 'id'>

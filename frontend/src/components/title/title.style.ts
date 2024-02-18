@@ -17,7 +17,7 @@ export const KontinumTitleH1 = styled.h1<TextPropsInterface>`
 `;
 export const KontinumTitleH2 = styled.h2<TextPropsInterface>`
     text-align: center;
-    font-size: 60px;
+    font-size: ${props => props.fs ? props.fs : '60px'};
     font-weight: lighter;
     color:  ${(props) => props.color ? props.color : '#0E4477' };
     margin: 4px;

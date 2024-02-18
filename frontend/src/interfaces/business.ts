@@ -14,7 +14,7 @@ export type BusinessType = Omit<BaseBusinessInterface, 'password'>;
 
 export type CreateBusinessType = Omit<BaseBusinessInterface, 'id'>
 
-export type LoginBusinessType = Pick<BaseBusinessInterface, 'businessEmail' | 'password'>
+export type LoginBusinessType = Pick<BaseBusinessInterface, | 'password'> & { mail: string }
 
 export type GetBusinessType = Pick<BaseBusinessInterface, 'id' | 'businessEmail'>
 

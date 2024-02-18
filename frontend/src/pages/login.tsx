@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-
-import { ContainerRegister, KontinumDiv, MultiSubContainer } from "../global/global.style";
+import { ContainerRegister, KontinumRegisterDiv, MultiSubContainer } from "../global/global.style";
 import { useLoginBusiness } from "../query";
 import { KontinumP, KontinumSignature, KontinumTitleH1, KontinumTitleH2 } from "../components/title/title.style";
 import { KontinumForm } from "../components/form/form";
@@ -13,7 +12,7 @@ import { KontinumButton } from "../components/button/button.style";
 import { Image } from "../components";
 
 type Inputs = {
-    businessEmail: string;
+    mail: string;
     password: string;
 }
 export function Login(): React.ReactElement {
@@ -24,17 +23,15 @@ export function Login(): React.ReactElement {
         formState: { errors },
     } = useForm<Inputs>()
 
-    const { mutate} = useLoginBusiness()
+    const { mutate: login} = useLoginBusiness()
 
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
-        mutate({
+        login({
             ...data,
         }, {
             onSuccess: () => navigate('/dashboard'),
             onError: (error) => {
-                toast.error(error.message, {
-                    position: 'top-center',
-                });
+                console.log(error);
             }
         })
     }
@@ -43,7 +40,7 @@ export function Login(): React.ReactElement {
 
 
     return (
-        <KontinumDiv>
+        <KontinumRegisterDiv>
             <Image />
             <ContainerRegister>
                 <MultiSubContainer padding={'50px'}>
@@ -53,8 +50,8 @@ export function Login(): React.ReactElement {
                 </MultiSubContainer>
 
                 <KontinumForm onSubmit={handleSubmit(onSubmit)}>
-                    <Input placeholder={'Enter your business email....'} inputLabel={'Business email'} {...register("businessEmail", { required: true })} ></Input>
-                    {errors.businessEmail && <span>This field is required</span>}
+                    <Input placeholder={'Enter your business email....'} inputLabel={'Business email'} {...register("mail", { required: true })} ></Input>
+                    {errors.mail && <span>This field is required</span>}
                     <Input placeholder={'Enter your password....'} inputLabel={'Password'} {...register("password", { required: true })} ></Input>
                     {errors.password && <span>This field is required</span>}
                     <KontinumP cursor={'pointer'} opacity={0.6} margin={'20px 0px 32px 0px'}>Forgot your password?</KontinumP>
@@ -70,6 +67,6 @@ export function Login(): React.ReactElement {
 
                 </KontinumForm>
             </ContainerRegister>
-        </KontinumDiv>
+        </KontinumRegisterDiv>
     )
 }

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast} from "react-toastify";
 
-import { ContainerRegister, KontinumDiv, MultiSubContainer } from "../global/global.style";
+import {ContainerRegister, KontinumDiv, KontinumRegisterDiv, MultiSubContainer} from "../global/global.style";
 import { RegisterFlow } from "../constants/pages/register";
 import { useCreateBusiness } from "../query";
 import { KontinumP, KontinumSignature, KontinumTitleH1, KontinumTitleH2 } from "../components/title/title.style";
@@ -58,7 +58,7 @@ export function Register(): React.ReactElement {
 
 
     return (
-        <KontinumDiv>
+        <KontinumRegisterDiv>
             <Image />
 
             <ContainerRegister>
@@ -107,7 +107,7 @@ export function Register(): React.ReactElement {
                 }
                 </KontinumForm>
             </ContainerRegister>
-        </KontinumDiv>
+        </KontinumRegisterDiv>
 
     )
 }
