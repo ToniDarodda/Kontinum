@@ -1,9 +1,7 @@
 package com.kontinum.routing.core
 
-import com.kontinum.repository.LeaderboardRepository
-import com.kontinum.service.leaderboard.dto.LeaderboardCreateDTO
-import com.kontinum.service.leaderboard.dto.LeaderboardDetailsCreateDTO
-import com.kontinum.service.leaderboard.dto.LeaderboardPatchDTO
+import com.kontinum.repository.LeaderboardRepositoryImpl
+import com.kontinum.service.leaderboard.dto.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -12,7 +10,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.leaderboardRouting(leaderboardRepository: LeaderboardRepository) {
+fun Application.leaderboardRouting(leaderboardRepository: LeaderboardRepositoryImpl) {
     routing {
 
         route("/leaderboard") {
@@ -24,55 +22,73 @@ fun Application.leaderboardRouting(leaderboardRepository: LeaderboardRepository)
                     val principal = call.principal<JWTPrincipal>()
                     val businessId = principal?.payload?.getClaim("userId")?.asInt()
 
-                    val createdLeaderboard = businessId?.let { it1 ->
-                        leaderboardRepository.createLeaderboard(param,
-                            it1
-                        )
+                    try {
+                        val createdLeaderboard = businessId?.let { it1 ->
+                            leaderboardRepository.createLeaderboard(param,
+                                it1
+                            )
+                        }
+
+                        if (createdLeaderboard != null) {
+                            call.respond(createdLeaderboard)
+                            return@post
+                        }
+                        throw Error("Error while creating leaderboard")
+
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@post
                     }
 
-                    if (createdLeaderboard != null) {
-                        call.respond(createdLeaderboard)
-                    }
 
-                    call.respond(HttpStatusCode.BadRequest, "Data missing or invalid in the payload of [post] Leaderboard!")
                 }
 
                 get("/{leaderboardId?}") {
-                    val param = call.parameters["leaderboardId"]?.toInt()
+                    val param = call.parameters["leaderboardId"]!!.toInt()
 
-                    val retrievedLeaderboard = param?.let { it1 -> leaderboardRepository.getLeaderboard(it1) }
+                    try {
+                        val retrievedLeaderboard = leaderboardRepository.getLeaderboard(param)
 
-                    if (retrievedLeaderboard != null) {
-                        call.respond(retrievedLeaderboard)
+                        if (retrievedLeaderboard != null) {
+                            call.respond(retrievedLeaderboard)
+                            return@get
+                        }
+                        throw Error("Error while retrieving leaderboard")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@get
                     }
 
-                    call.respond(HttpStatusCode.NotFound, "No Leader board found with leaderboardId: $param")
                 }
 
                 patch("/{leaderboardId?}") {
-                    val param = call.parameters["leaderboardId"]?.toInt()
+                    val param = call.parameters["leaderboardId"]!!.toInt()
 
                     val patchLeaderboard = call.receive<LeaderboardPatchDTO>()
 
-                    val patchedLeaderboard =
-                        param?.let { it1 -> leaderboardRepository.patchLeaderBoard(it1, patchLeaderboard) }
-
-                    if (patchedLeaderboard != null) {
+                    try {
+                        val patchedLeaderboard = leaderboardRepository.patchLeaderBoard(param, patchLeaderboard)
                         call.respond(patchedLeaderboard)
-                    }
+                        return@patch
 
-                    call.respond(HttpStatusCode.NotFound, "No Leader board found with leaderboardId: $param")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.NotFound, err)
+                        return@patch
+                    }
                 }
 
                 delete("/{leaderboardId?}") {
-                    val param = call.parameters["leaderboardId"]?.toInt()
+                    val param = call.parameters["leaderboardId"]!!.toInt()
 
-                    if (param != null) {
+                    try {
                         leaderboardRepository.deleteLeaderboard(param)
                         call.respond("Purchase deleted successfully!")
+                        return@delete
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@delete
                     }
 
-                    call.respond(HttpStatusCode.UnprocessableEntity, "Error occur while deleting leaderboard!")
                 }
 
             }
@@ -84,41 +100,53 @@ fun Application.leaderboardRouting(leaderboardRepository: LeaderboardRepository)
                     post() {
                         val param = call.receive<LeaderboardDetailsCreateDTO>()
 
-                        val createdDetail = leaderboardRepository.createLeaderboardDetail(param)
+                        try {
+                            val createdDetail = leaderboardRepository.createLeaderboardDetail(param)
 
-                        if (createdDetail != null) {
-                            call.respond(createdDetail)
+                            if (createdDetail != null) {
+                                call.respond(createdDetail)
+                                return@post
+                            }
+                            throw Error("Error while creating leaderboard details")
+
+                        } catch (err: Error) {
+                            call.respond(HttpStatusCode.UnprocessableEntity, err)
+                            return@post
                         }
 
-                        call.respond(HttpStatusCode.BadRequest, "Data missing or invalid in the payload of [post] Leaderboard details!")
                     }
 
                     post("/many") {
                         val param = call.receive<List<LeaderboardDetailsCreateDTO>>()
 
-                        val createdDetails = param.map { leaderboardRepository.createLeaderboardDetail(it) }
+                        try {
+                            val createdDetails = param.map { leaderboardRepository.createLeaderboardDetail(it) }
 
-                        if (createdDetails.isNotEmpty()) {
-                            call.respond(createdDetails)
+                            if (createdDetails.isNotEmpty()) {
+                                call.respond(createdDetails)
+                                return@post
+                            }
+                            throw Error("Error while creating many leaderboard details")
+                        } catch (err: Error) {
+                            call.respond(HttpStatusCode.UnprocessableEntity, err)
+                            return@post
                         }
 
-                        call.respond(HttpStatusCode.BadRequest, "Data missing or invalid in the payload of [post] Leaderboard details many!")
+
                     }
 
                     get("/{userId?}") {
-                        val param = call.parameters["userId"]?.toInt()
+                        val param = call.parameters["userId"]!!.toInt()
 
-                        val retrievedLeaderboardDetails = param?.let { it1 ->
-                            leaderboardRepository.getLeaderboardDetailsByUserId(
-                                it1
-                            )
-                        }
-
-                        if (retrievedLeaderboardDetails != null) {
+                        try {
+                            val retrievedLeaderboardDetails = leaderboardRepository.getLeaderboardDetailsByUserId(param)
                             call.respond(retrievedLeaderboardDetails)
+                            return@get
+                        } catch (err: Error) {
+                            call.respond(HttpStatusCode.UnprocessableEntity, err)
+                            return@get
                         }
 
-                        call.respond(HttpStatusCode.NotFound, "No Leaderboard details found with userId: $param")
                     }
 
                 }

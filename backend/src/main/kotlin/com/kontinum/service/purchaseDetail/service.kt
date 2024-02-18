@@ -1,15 +1,9 @@
 package com.kontinum.service.purchaseDetail
 
-import com.kontinum.model.purchase.Purchase
-import com.kontinum.model.purchase.PurchaseDetail
-import com.kontinum.model.purchase.PurchaseDetails
-import com.kontinum.model.purchase.Purchases
+import com.kontinum.model.purchase.*
 import com.kontinum.service.purchaseDetail.dto.PurchaseDetailsCreateDTO
-import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class PurchaseDetailsService : PurchaseDetailsInterface {

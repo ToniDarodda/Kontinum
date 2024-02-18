@@ -1,8 +1,6 @@
 package com.kontinum.service.purchaseDetail
 
-import com.kontinum.model.purchase.Purchase
 import com.kontinum.model.purchase.PurchaseDetail
-import com.kontinum.model.purchase.PurchaseDetails
 import com.kontinum.service.purchaseDetail.dto.PurchaseDetailsCreateDTO
 
 interface PurchaseDetailsInterface {

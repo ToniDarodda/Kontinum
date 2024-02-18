@@ -3,11 +3,9 @@ package com.kontinum.repository
 import com.kontinum.model.leaderboard.Leaderboard
 import com.kontinum.model.leaderboard.LeaderboardDetail
 import com.kontinum.service.leaderboard.LeaderboardServices
-import com.kontinum.service.leaderboard.dto.LeaderboardCreateDTO
-import com.kontinum.service.leaderboard.dto.LeaderboardDetailsCreateDTO
-import com.kontinum.service.leaderboard.dto.LeaderboardPatchDTO
+import com.kontinum.service.leaderboard.dto.*
 
-class LeaderboardRepository(private val leaderboardServices: LeaderboardServices) {
+class LeaderboardRepositoryImpl(private val leaderboardServices: LeaderboardServices) {
     suspend fun createLeaderboard(data: LeaderboardCreateDTO, businessId: Int): Leaderboard? {
         return this.leaderboardServices.createLeaderboard(data, businessId)
     }

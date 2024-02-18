@@ -4,28 +4,19 @@ import com.kontinum.model.Business
 import com.kontinum.model.BusinessData
 import com.kontinum.model.User
 import com.kontinum.model.Users
-import com.kontinum.service.business.dto.BusinessCreateDTO
-import com.kontinum.service.business.dto.BusinessGetDTO
-import com.kontinum.service.business.dto.BusinessPatchDTO
-import com.kontinum.util.checkPassword
-import com.kontinum.util.generateToken
-import com.kontinum.util.hashPassword
+import com.kontinum.service.business.dto.*
+import com.kontinum.util.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class BusinessService : BusinessInterface {
-
-    val secret = "Z+MU@YqP+jwXVf&jQ&U#((q7V5tWc(a^n6H)7MVUNDdaNp7QeUHd^)@hCLSW+"
-    val issuer = "http://localhost:8080"
-    val audience = "Kontinum"
+class BusinessService(private val tokenManager: TokenManager) : BusinessInterface {
 
     private fun resultRowToUser(row: ResultRow) = User(
         id = row[Users.id],
         firstName = row[Users.firstName],
         lastName = row[Users.lastName],
         email = row[Users.email],
-        businessId = row[Users.businessId]
     )
     private fun rowToBusiness(row: ResultRow) = BusinessData(
         id = row[Business.id],
@@ -48,9 +39,7 @@ class BusinessService : BusinessInterface {
             }
             createdBusiness.resultedValues?.singleOrNull()?.let(::rowToBusiness)
         }
-
-        val token = createdBusiness?.let { generateToken(audience, issuer, it.id, secret) }
-
+        val token = createdBusiness?.let { tokenManager.generateToken(it.id) }
         return token;
     }
 
@@ -69,7 +58,7 @@ class BusinessService : BusinessInterface {
             return null
         }
 
-        val token = generateToken(audience, issuer, businessUser.id, secret)
+        val token = tokenManager.generateToken(businessUser.id)
 
         return token
     }

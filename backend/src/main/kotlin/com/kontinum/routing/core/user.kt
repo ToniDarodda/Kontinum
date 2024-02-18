@@ -1,8 +1,7 @@
 package com.kontinum.routing.core
 
 import com.kontinum.repository.UserRepositoryImpl
-import com.kontinum.service.user.dto.UserCreateDTO
-import com.kontinum.service.user.dto.UserPatchDTO
+import com.kontinum.service.user.dto.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -23,60 +22,83 @@ fun Application.userRouting(userRepository: UserRepositoryImpl) {
                     val params = call.receive<UserCreateDTO>()
                     val principal = call.principal<JWTPrincipal>()
                     val businessId = principal?.payload?.getClaim("userId")?.asInt()
-                    val createdUser = businessId?.let { it1 -> userRepository.registerUser(params, it1) }
 
-                    if (createdUser != null) {
-                        call.respond(createdUser)
+                    try {
+                        val createdUser = businessId?.let { it1 -> userRepository.registerUser(params, it1) }
+
+                        if (createdUser != null) {
+                            call.respond(createdUser)
+                            return@post
+                        }
+                        throw Error("Error while creating user")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity,err)
+                        return@post
                     }
 
-                    call.respond(HttpStatusCode.Conflict,"Email already used!")
                 }
 
                 patch("/{id?}") {
-                    val paramId = call.parameters["id"]?.toInt()
+                    val paramId = call.parameters["id"]!!.toInt()
                     val param = call.receive<UserPatchDTO>()
 
-                    if (paramId != null) {
+                    try {
                         val patchedUser = userRepository.patchUserById(paramId, param)
-
                         call.respond(patchedUser)
+                        return@patch
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@patch
                     }
 
-                    call.respond(HttpStatusCode.NotFound, "UserId not found!")
                 }
 
                 get() {
                     val principal = call.principal<JWTPrincipal>()
                     val businessId = principal?.payload?.getClaim("userId")?.asInt()
-                    val retrievedUsers = businessId?.let { it1 -> userRepository.getAllUSer(it1) }
 
-                    if (retrievedUsers != null) {
-                        call.respond(retrievedUsers)
+                    try {
+                        val retrievedUsers = businessId?.let { it1 -> userRepository.getAllUSer(it1) }
+
+                        if (retrievedUsers != null) {
+                            call.respond(retrievedUsers)
+                            return@get
+                        }
+                        throw Error("Error while retrieving business user")
+
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@get
                     }
-
-                    call.respond(HttpStatusCode.UnprocessableEntity, "An error occur while retrieving users!")
                 }
 
                 get("/{id}") {
-                    val params = call.parameters["id"]?.toInt()
+                    val params = call.parameters["id"]!!.toInt()
 
-                    if (params == null) {
-                        call.respondText("Missing userId")
-                    } else {
+                    try {
                         val retrievedUser = userRepository.getUserById(params)
-                        if (retrievedUser != null) call.respond(retrievedUser)
+                        if (retrievedUser != null) {
+                            call.respond(retrievedUser)
+                            return@get
+                        }
+                        throw Error("Error while retrieving users")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@get
                     }
-                    call.respond(HttpStatusCode.NotFound, "UserId does not exist!")
+
                 }
 
                 delete("/{id?}") {
-                    val params = call.parameters["id"]?.toInt()
+                    val params = call.parameters["id"]!!.toInt()
 
-                    if (params == null) {
-                        call.respondText("Missing userId")
-                    } else {
+                    try {
                         userRepository.deleteUserById(params)
                         call.respondText("User deleted successfully!")
+                        return@delete
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@delete
                     }
                 }
 

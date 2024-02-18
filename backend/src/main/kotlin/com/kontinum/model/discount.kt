@@ -1,6 +1,5 @@
 package com.kontinum.model
 
-import com.kontinum.model.Cocktails.references
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table

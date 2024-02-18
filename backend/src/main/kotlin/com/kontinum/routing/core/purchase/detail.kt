@@ -1,7 +1,7 @@
 package com.kontinum.routing.core.purchase
 
-import com.kontinum.repository.PurchaseDetailRepository
-import com.kontinum.service.purchaseDetail.dto.PurchaseDetailsCreateDTO
+import com.kontinum.repository.PurchaseDetailRepositoryImpl
+import com.kontinum.service.purchaseDetail.dto.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -9,7 +9,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.purchaseDetail(purchaseDetailRepository: PurchaseDetailRepository) {
+fun Application.purchaseDetail(purchaseDetailRepository: PurchaseDetailRepositoryImpl) {
     routing {
 
         route("/purchase/detail") {
@@ -19,71 +19,80 @@ fun Application.purchaseDetail(purchaseDetailRepository: PurchaseDetailRepositor
                 post() {
                     val param = call.receive<PurchaseDetailsCreateDTO>()
 
-                    val createdPurchaseDetail = purchaseDetailRepository.createPurchaseDetail(param)
-
-                    if (createdPurchaseDetail != null) {
-                        call.respond(createdPurchaseDetail)
+                    try {
+                        val createdPurchaseDetail = purchaseDetailRepository.createPurchaseDetail(param)
+                        if (createdPurchaseDetail != null) {
+                            call.respond(createdPurchaseDetail)
+                            return@post
+                        }
+                        throw Error("Error while creating detail")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@post
                     }
 
-                    call.respond(HttpStatusCode.BadRequest, "Data missing or invalid in the payload of [post] PurchaseDetails!")
                 }
 
                 get("/{id?}") {
-                    val param = call.parameters["id"]?.toInt()
+                    val param = call.parameters["id"]!!.toInt()
 
-                    val retrievedPurchaseDetail = param?.let { it1 -> purchaseDetailRepository.getPurchaseDetail(it1) }
+                    try {
+                        val retrievedPurchaseDetail = purchaseDetailRepository.getPurchaseDetail(param)
 
-                    if (retrievedPurchaseDetail != null) {
-                        call.respond(retrievedPurchaseDetail)
+                        if (retrievedPurchaseDetail != null) {
+                            call.respond(retrievedPurchaseDetail)
+                            return@get
+                        }
+                        throw Error("Error while retrieving purchase detail")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@get
                     }
 
-                    call.respond(HttpStatusCode.NotFound, "No Purchases Details found whit the PurchaseDetailsId: $param")
                 }
 
                 get("/purchase/{id?}") {
-                    val param = call.parameters["id"]?.toInt()
+                    val param = call.parameters["id"]!!.toInt()
 
-                    val retrievedPurchaseDetail = param?.let { it1 ->
-                        purchaseDetailRepository.getPurchaseDetailByPurchaseId(
-                            it1
-                        )
-                    }
-
-
-                    if (retrievedPurchaseDetail != null) {
+                    try {
+                        val retrievedPurchaseDetail = purchaseDetailRepository.getPurchaseDetailByPurchaseId(param)
                         call.respond(retrievedPurchaseDetail)
+                        return@get
+                    } catch (err: Error) {
+                       call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@get
                     }
 
-                    call.respond(HttpStatusCode.NotFound, "No Purchases Details found whit the PurchaseId: $param")
                 }
 
                 get("/business/{id?}") {
-                    val param = call.parameters["id"]?.toInt()
+                    val param = call.parameters["id"]!!.toInt()
 
-                    val retrievedPurchaseDetails = param?.let { it1 ->
-                        purchaseDetailRepository.getPurchaseDetailsByBusinessId(
-                            it1
-                        )
-                    }
-
-                    if (retrievedPurchaseDetails?.isNotEmpty() == true) {
+                    try {
+                        val retrievedPurchaseDetails = purchaseDetailRepository.getPurchaseDetailsByBusinessId(param)
                         call.respond(retrievedPurchaseDetails)
+                        return@get
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@get
                     }
 
-                    call.respond(HttpStatusCode.NotFound, "No Purchases Details found whit the BusinessId: $param")
                 }
 
                 delete("/{id?}") {
-                    val param = call.parameters["id"]?.toInt()
+                    val param = call.parameters["id"]!!.toInt()
 
-                    if (param != null) {
+                    try {
                         purchaseDetailRepository.deletePurchaseDetail(param)
                         call.respondText { "Purchase detail deleted successfully!" }
+                        return@delete
+
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@delete
                     }
 
-                    call.respondText { "Error while processing to the deletion of Purchase details with id: $param" }
                 }
-
             }
         }
     }

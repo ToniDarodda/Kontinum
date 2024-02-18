@@ -1,8 +1,7 @@
 package com.kontinum.service.cocktail
 
 import com.kontinum.model.Cocktail
-import com.kontinum.service.cocktail.dto.CocktailCreateDTO
-import com.kontinum.service.cocktail.dto.CocktailPatchDTO
+import com.kontinum.service.cocktail.dto.*
 
 interface CocktailInterface {
     suspend fun createCocktail(data: CocktailCreateDTO, businessId: Int): Cocktail?

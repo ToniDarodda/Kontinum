@@ -1,9 +1,7 @@
 package com.kontinum.model
 
-import com.kontinum.model.leaderboard.Leaderboards.references
 import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.sql.ReferenceOption
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.*
 
 object Stocks : Table() {
     val id = integer("id").autoIncrement()

@@ -2,8 +2,7 @@ package com.kontinum.service.stock
 
 import com.kontinum.model.Stock
 import com.kontinum.model.Stocks
-import com.kontinum.service.stock.dto.StockCreateDTO
-import com.kontinum.service.stock.dto.StockPatchDTO
+import com.kontinum.service.stock.dto.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction

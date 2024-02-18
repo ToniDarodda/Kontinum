@@ -1,12 +1,7 @@
 package com.kontinum.service.leaderboard
 
-import com.kontinum.model.leaderboard.Leaderboard
-import com.kontinum.model.leaderboard.LeaderboardDetail
-import com.kontinum.model.leaderboard.LeaderboardDetails
-import com.kontinum.model.leaderboard.Leaderboards
-import com.kontinum.service.leaderboard.dto.LeaderboardCreateDTO
-import com.kontinum.service.leaderboard.dto.LeaderboardDetailsCreateDTO
-import com.kontinum.service.leaderboard.dto.LeaderboardPatchDTO
+import com.kontinum.model.leaderboard.*
+import com.kontinum.service.leaderboard.dto.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction

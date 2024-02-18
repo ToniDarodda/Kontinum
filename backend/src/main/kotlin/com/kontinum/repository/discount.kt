@@ -2,10 +2,9 @@ package com.kontinum.repository
 
 import com.kontinum.model.Discount
 import com.kontinum.service.discount.DiscountService
-import com.kontinum.service.discount.dto.DiscountCreateDTO
-import com.kontinum.service.discount.dto.DiscountPatchDTO
+import com.kontinum.service.discount.dto.*
 
-class DiscountRepository(private val discountService: DiscountService) {
+class DiscountRepositoryImpl(private val discountService: DiscountService) {
     suspend fun createDiscount(data: DiscountCreateDTO, businessId: Int): Discount? {
         return this.discountService.createDiscount(data, businessId)
     }

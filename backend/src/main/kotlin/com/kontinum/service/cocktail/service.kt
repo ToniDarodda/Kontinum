@@ -2,8 +2,7 @@ package com.kontinum.service.cocktail
 
 import com.kontinum.model.Cocktail
 import com.kontinum.model.Cocktails
-import com.kontinum.service.cocktail.dto.CocktailCreateDTO
-import com.kontinum.service.cocktail.dto.CocktailPatchDTO
+import com.kontinum.service.cocktail.dto.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction

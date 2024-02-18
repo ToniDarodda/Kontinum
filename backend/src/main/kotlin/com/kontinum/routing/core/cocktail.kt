@@ -1,8 +1,7 @@
 package com.kontinum.routing.core
 
 import com.kontinum.repository.CocktailRepositoryImpl
-import com.kontinum.service.cocktail.dto.CocktailCreateDTO
-import com.kontinum.service.cocktail.dto.CocktailPatchDTO
+import com.kontinum.service.cocktail.dto.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -21,59 +20,89 @@ fun Application.cocktailRouting(cocktailRepository: CocktailRepositoryImpl) {
                     val businessId = principal?.payload?.getClaim("userId")?.asInt()
                     val params = call.receive<CocktailCreateDTO>()
 
-                    val createdCocktail = businessId?.let { it1 -> cocktailRepository.createCocktail(params, it1) }
+                    try {
+                        val createdCocktail = businessId?.let { it1 -> cocktailRepository.createCocktail(params, it1) }
 
-                    if (createdCocktail != null) call.respond(createdCocktail)
+                        if (createdCocktail != null) {
+                            call.respond(createdCocktail)
+                            return@post
+                        }
+                        throw Error("Error while creating cocktail")
 
-                    call.respond(HttpStatusCode.UnprocessableEntity, "Value missing in request body")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@post
+                    }
+
                 }
 
                 get() {
                     val principal = call.principal<JWTPrincipal>()
                     val businessId = principal?.payload?.getClaim("userId")?.asInt()
-                    val retrievedCocktail = businessId?.let { it1 -> cocktailRepository.getCocktails(it1) }
+                    try {
+                        val retrievedCocktail = businessId?.let { it1 -> cocktailRepository.getCocktails(it1) }
 
-                    if (retrievedCocktail?.isNotEmpty() == true) call.respond(retrievedCocktail)
+                        if (retrievedCocktail?.isNotEmpty() == true) {
+                            call.respond(retrievedCocktail)
+                            return@get
+                        }
+                        throw Error("Error while retrieving cocktails for a business")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@get
+                    }
 
-                    call.respond(HttpStatusCode.NotFound, "No cocktail retrieved!")
                 }
 
                 get("/{id?}") {
-                    val params = call.parameters["id"]
+                    val params = call.parameters["id"]!!.toInt()
 
-                    val retrievedCocktail = params?.toInt()?.let { it1 -> cocktailRepository.getCocktail(it1) }
+                    try {
+                        val retrievedCocktail = cocktailRepository.getCocktail(params)
 
-                    if (retrievedCocktail != null) {
-                        call.respond(retrievedCocktail)
+                        if (retrievedCocktail != null) {
+                            call.respond(retrievedCocktail)
+                            return@get
+                        }
+                        throw Error("Error while retrieving cocktail")
+
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@get
                     }
 
-                    call.respond(HttpStatusCode.NotFound, "No cocktail retrieved with id provided!")
                 }
 
                 patch("/{id?}") {
-                    val param = call.parameters["id"]
-
+                    val param = call.parameters["id"]!!.toInt()
                     val patchCocktailObj = call.receive<CocktailPatchDTO>()
 
-                    val patchedCocktailNumber =
-                        param?.let { it1 -> cocktailRepository.patchCocktail(it1.toInt(), patchCocktailObj) }
+                    try {
 
-                    if (patchedCocktailNumber != null) {
+                        val patchedCocktailNumber = cocktailRepository.patchCocktail(param, patchCocktailObj)
+
                         call.respond(patchedCocktailNumber)
+                        return@patch
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@patch
                     }
 
-                    call.respond(HttpStatusCode.UnprocessableEntity, "No cocktail has been patched!")
+
                 }
 
                 delete("/{id?}") {
-                    val param = call.parameters["id"]
+                    val param = call.parameters["id"]!!.toInt()
 
-                    if (param != null) {
-                        cocktailRepository.deleteCocktail(param.toInt())
+                    try {
+                        cocktailRepository.deleteCocktail(param)
                         call.respondText("Cocktails has been deleted successfully!")
+                        return@delete
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        return@delete
                     }
 
-                    call.respondText("An error occurred while deleting the cocktail!")
                 }
 
             }

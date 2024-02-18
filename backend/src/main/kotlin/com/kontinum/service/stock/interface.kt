@@ -1,8 +1,7 @@
 package com.kontinum.service.stock
 
 import com.kontinum.model.Stock
-import com.kontinum.service.stock.dto.StockCreateDTO
-import com.kontinum.service.stock.dto.StockPatchDTO
+import com.kontinum.service.stock.dto.*
 
 interface StockInterface {
     suspend fun createStock(data: StockCreateDTO, businessId: Int): Stock?

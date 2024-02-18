@@ -1,8 +1,7 @@
 package com.kontinum.service.user
 
 import com.kontinum.model.User
-import com.kontinum.service.user.dto.UserCreateDTO
-import com.kontinum.service.user.dto.UserPatchDTO
+import com.kontinum.service.user.dto.*
 
 interface UserInterface {
     suspend fun createUser(data: UserCreateDTO, businessId: Int): User?

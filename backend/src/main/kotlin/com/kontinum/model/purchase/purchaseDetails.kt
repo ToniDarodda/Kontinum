@@ -2,8 +2,7 @@ package com.kontinum.model.purchase
 
 import com.kontinum.model.Cocktails
 import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.sql.ReferenceOption
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.*
 
 object PurchaseDetails : Table() {
     val id = integer("id").autoIncrement()

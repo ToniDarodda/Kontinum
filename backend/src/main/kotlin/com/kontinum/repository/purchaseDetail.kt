@@ -2,9 +2,9 @@ package com.kontinum.repository
 
 import com.kontinum.model.purchase.PurchaseDetail
 import com.kontinum.service.purchaseDetail.PurchaseDetailsService
-import com.kontinum.service.purchaseDetail.dto.PurchaseDetailsCreateDTO
+import com.kontinum.service.purchaseDetail.dto.*
 
-class PurchaseDetailRepository(private val purchaseDetailsService: PurchaseDetailsService) {
+class PurchaseDetailRepositoryImpl(private val purchaseDetailsService: PurchaseDetailsService) {
     suspend fun createPurchaseDetail(data: PurchaseDetailsCreateDTO): PurchaseDetail? {
         return this.purchaseDetailsService.createPurchaseDetails(data)
     }

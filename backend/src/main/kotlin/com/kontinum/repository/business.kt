@@ -3,11 +3,9 @@ package com.kontinum.repository
 import com.kontinum.model.BusinessData
 import com.kontinum.model.User
 import com.kontinum.service.business.BusinessService
-import com.kontinum.service.business.dto.BusinessCreateDTO
-import com.kontinum.service.business.dto.BusinessGetDTO
-import com.kontinum.service.business.dto.BusinessPatchDTO
+import com.kontinum.service.business.dto.*
 
-class BusinessRepository(private val businessService: BusinessService) {
+class BusinessRepositoryImpl(private val businessService: BusinessService) {
     suspend fun createBusiness(data: BusinessCreateDTO): String? {
         return this.businessService.createBusiness(data)
     }

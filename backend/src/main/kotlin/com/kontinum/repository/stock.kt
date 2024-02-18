@@ -2,10 +2,9 @@ package com.kontinum.repository
 
 import com.kontinum.model.Stock
 import com.kontinum.service.stock.StockService
-import com.kontinum.service.stock.dto.StockCreateDTO
-import com.kontinum.service.stock.dto.StockPatchDTO
+import com.kontinum.service.stock.dto.*
 
-class StockRepository(private val stockService: StockService) {
+class StockRepositoryImpl(private val stockService: StockService) {
     suspend fun createStock(data: StockCreateDTO, businessId: Int): Stock? {
         return this.stockService.createStock(data, businessId)
     }

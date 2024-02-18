@@ -2,8 +2,7 @@ package com.kontinum.repository
 
 import com.kontinum.model.Cocktail
 import com.kontinum.service.cocktail.CocktailService
-import com.kontinum.service.cocktail.dto.CocktailCreateDTO
-import com.kontinum.service.cocktail.dto.CocktailPatchDTO
+import com.kontinum.service.cocktail.dto.*
 
 class CocktailRepositoryImpl(private val cocktailService: CocktailService) {
     suspend fun createCocktail(data: CocktailCreateDTO, businessId: Int): Cocktail? {

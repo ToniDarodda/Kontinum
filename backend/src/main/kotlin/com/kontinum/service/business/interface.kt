@@ -2,9 +2,7 @@ package com.kontinum.service.business
 
 import com.kontinum.model.BusinessData
 import com.kontinum.model.User
-import com.kontinum.service.business.dto.BusinessCreateDTO
-import com.kontinum.service.business.dto.BusinessGetDTO
-import com.kontinum.service.business.dto.BusinessPatchDTO
+import com.kontinum.service.business.dto.*
 
 interface BusinessInterface {
     suspend fun createBusiness(data: BusinessCreateDTO): String?

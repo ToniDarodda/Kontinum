@@ -3,8 +3,7 @@ package com.kontinum.service.user
 
 import com.kontinum.model.User
 import com.kontinum.model.Users
-import com.kontinum.service.user.dto.UserCreateDTO
-import com.kontinum.service.user.dto.UserPatchDTO
+import com.kontinum.service.user.dto.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction

@@ -2,8 +2,7 @@ package com.kontinum.service.discount
 
 import com.kontinum.model.Discount
 import com.kontinum.model.Discounts
-import com.kontinum.service.discount.dto.DiscountCreateDTO
-import com.kontinum.service.discount.dto.DiscountPatchDTO
+import com.kontinum.service.discount.dto.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
