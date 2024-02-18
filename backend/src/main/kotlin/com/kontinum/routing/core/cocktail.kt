@@ -6,6 +6,7 @@ import com.kontinum.service.cocktail.dto.CocktailPatchDTO
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -16,9 +17,11 @@ fun Application.cocktailRouting(cocktailRepository: CocktailRepositoryImpl) {
             authenticate("auth-jwt") {
 
                 post() {
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")?.asInt()
                     val params = call.receive<CocktailCreateDTO>()
 
-                    val createdCocktail = cocktailRepository.createCocktail(params)
+                    val createdCocktail = businessId?.let { it1 -> cocktailRepository.createCocktail(params, it1) }
 
                     if (createdCocktail != null) call.respond(createdCocktail)
 
@@ -26,9 +29,11 @@ fun Application.cocktailRouting(cocktailRepository: CocktailRepositoryImpl) {
                 }
 
                 get() {
-                    val retrievedCocktail = cocktailRepository.getCocktails()
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")?.asInt()
+                    val retrievedCocktail = businessId?.let { it1 -> cocktailRepository.getCocktails(it1) }
 
-                    if (retrievedCocktail.isNotEmpty()) call.respond(retrievedCocktail)
+                    if (retrievedCocktail?.isNotEmpty() == true) call.respond(retrievedCocktail)
 
                     call.respond(HttpStatusCode.NotFound, "No cocktail retrieved!")
                 }

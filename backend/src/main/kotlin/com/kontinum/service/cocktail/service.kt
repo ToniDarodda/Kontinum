@@ -13,14 +13,16 @@ class CocktailService : CocktailInterface {
     private fun cocktailToRow(row: ResultRow) = Cocktail(
         id = row[Cocktails.id],
         name = row[Cocktails.name],
-        pricePerGlass = row[Cocktails.pricePerServing]
+        pricePerGlass = row[Cocktails.pricePerServing],
+        businessId = row[Cocktails.businessId]
     )
 
-    override suspend fun createCocktail(data: CocktailCreateDTO): Cocktail? {
+    override suspend fun createCocktail(data: CocktailCreateDTO, bussId: Int): Cocktail? {
         return transaction {
             val createdCocktail = Cocktails.insert {
                 it[name] = data.name
                 it[pricePerServing] = data.pricePerServing
+                it[businessId] = bussId
             }
 
             createdCocktail.resultedValues?.singleOrNull()?.let(::cocktailToRow)
@@ -35,9 +37,9 @@ class CocktailService : CocktailInterface {
         }
     }
 
-    override suspend fun getCocktails(): List<Cocktail> {
+    override suspend fun getCocktails(businessId: Int): List<Cocktail> {
         return transaction {
-            val retrievedCocktails = Cocktails.selectAll()
+            val retrievedCocktails = Cocktails.selectAll().where { Cocktails.businessId eq businessId }
 
             retrievedCocktails.map(::cocktailToRow)
         }

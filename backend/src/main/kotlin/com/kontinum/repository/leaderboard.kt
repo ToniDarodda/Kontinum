@@ -8,8 +8,8 @@ import com.kontinum.service.leaderboard.dto.LeaderboardDetailsCreateDTO
 import com.kontinum.service.leaderboard.dto.LeaderboardPatchDTO
 
 class LeaderboardRepository(private val leaderboardServices: LeaderboardServices) {
-    suspend fun createLeaderboard(data: LeaderboardCreateDTO): Leaderboard? {
-        return this.leaderboardServices.createLeaderboard(data)
+    suspend fun createLeaderboard(data: LeaderboardCreateDTO, businessId: Int): Leaderboard? {
+        return this.leaderboardServices.createLeaderboard(data, businessId)
     }
 
     suspend fun createLeaderboardDetail(data: LeaderboardDetailsCreateDTO): LeaderboardDetail? {

@@ -1,6 +1,7 @@
 package com.kontinum.repository
 
 import com.kontinum.model.BusinessData
+import com.kontinum.model.User
 import com.kontinum.service.business.BusinessService
 import com.kontinum.service.business.dto.BusinessCreateDTO
 import com.kontinum.service.business.dto.BusinessGetDTO
@@ -17,6 +18,10 @@ class BusinessRepository(private val businessService: BusinessService) {
 
     suspend fun getBusiness(businessId: Int): BusinessData? {
         return this.businessService.getBusiness(businessId)
+    }
+
+    suspend fun getBusinessUser(businessId: Int): List<User> {
+        return this.businessService.getBusinessUser(businessId)
     }
 
     suspend fun patchBusiness(businessId: Int, data: BusinessPatchDTO): Int {

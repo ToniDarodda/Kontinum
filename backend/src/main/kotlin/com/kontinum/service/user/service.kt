@@ -16,10 +16,9 @@ class UserService : UserInterface {
         firstName = row[Users.firstName],
         lastName = row[Users.lastName],
         email = row[Users.email],
-        businessId = row[Users.businessId]
     )
 
-    override suspend fun createUser(data: UserCreateDTO): User? {
+    override suspend fun createUser(data: UserCreateDTO, businessId: Int): User? {
 
         val throwIfExist = this.getUserByEmail(data.email)
 
@@ -31,8 +30,7 @@ class UserService : UserInterface {
                 it[firstName] = data.firstName
                 it[lastName] = data.lastName
                 it[email] = data.email
-                it[password] = data.password
-                it[businessId] = data.businessId
+                it[this.businessId] = businessId
             }
 
             insertedUser.resultedValues?.singleOrNull()?.let(::resultRowToUser)
@@ -50,10 +48,10 @@ class UserService : UserInterface {
 
 
 
-    override suspend fun getUsers(): List<User> {
+    override suspend fun getUsers(businessId: Int): List<User> {
         return transaction {
 
-            val allUser = Users.selectAll()
+            val allUser = Users.selectAll().where { Users.businessId eq businessId }
 
             allUser.map(::resultRowToUser)
         }
@@ -87,13 +85,7 @@ class UserService : UserInterface {
         }
     }
 
-    override suspend fun putUser(userId: Int, email: String) {
-        Users.update({ Users.id eq userId}) {
-            it[Users.email] = email
-        }
-    }
-
-    override suspend fun deleteUser(userId: Int) {
+    override suspend fun deleteUser(userId: Int): Unit {
         transaction {
 
             Users.deleteWhere { Users.id eq userId }

@@ -2,6 +2,8 @@ package com.kontinum.service.business
 
 import com.kontinum.model.Business
 import com.kontinum.model.BusinessData
+import com.kontinum.model.User
+import com.kontinum.model.Users
 import com.kontinum.service.business.dto.BusinessCreateDTO
 import com.kontinum.service.business.dto.BusinessGetDTO
 import com.kontinum.service.business.dto.BusinessPatchDTO
@@ -17,6 +19,14 @@ class BusinessService : BusinessInterface {
     val secret = "Z+MU@YqP+jwXVf&jQ&U#((q7V5tWc(a^n6H)7MVUNDdaNp7QeUHd^)@hCLSW+"
     val issuer = "http://localhost:8080"
     val audience = "Kontinum"
+
+    private fun resultRowToUser(row: ResultRow) = User(
+        id = row[Users.id],
+        firstName = row[Users.firstName],
+        lastName = row[Users.lastName],
+        email = row[Users.email],
+        businessId = row[Users.businessId]
+    )
     private fun rowToBusiness(row: ResultRow) = BusinessData(
         id = row[Business.id],
         businessName = row[Business.businessName],
@@ -69,6 +79,15 @@ class BusinessService : BusinessInterface {
             val retrievedBusiness = Business.selectAll().where { Business.id eq businessId }
 
             retrievedBusiness.singleOrNull()?.let(::rowToBusiness)
+        }
+    }
+
+    override suspend fun getBusinessUser(businessId: Int): List<User> {
+        return transaction {
+
+            val retrievedUsers = Users.selectAll().where { Users.businessId eq businessId }
+            retrievedUsers.map(::resultRowToUser)
+
         }
     }
 

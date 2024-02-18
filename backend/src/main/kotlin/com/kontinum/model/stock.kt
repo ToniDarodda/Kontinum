@@ -1,15 +1,15 @@
 package com.kontinum.model
 
+import com.kontinum.model.leaderboard.Leaderboards.references
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 
 object Stocks : Table() {
     val id = integer("id").autoIncrement()
-
     val capacity = integer("capacity").default(0)
-
     val cocktailId = reference("cocktailId", Cocktails.id).references(Cocktails.id, onDelete = ReferenceOption.CASCADE)
+    val businessId = integer("businessId").references(Business.id)
 
     override val primaryKey = PrimaryKey(id)
 

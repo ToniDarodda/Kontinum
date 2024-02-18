@@ -9,6 +9,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 
 fun Application.userRouting(userRepository: UserRepositoryImpl) {
 
@@ -20,7 +21,9 @@ fun Application.userRouting(userRepository: UserRepositoryImpl) {
 
                 post() {
                     val params = call.receive<UserCreateDTO>()
-                    val createdUser = userRepository.registerUser(params)
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")?.asInt()
+                    val createdUser = businessId?.let { it1 -> userRepository.registerUser(params, it1) }
 
                     if (createdUser != null) {
                         call.respond(createdUser)
@@ -43,9 +46,15 @@ fun Application.userRouting(userRepository: UserRepositoryImpl) {
                 }
 
                 get() {
-                    val retrievedUsers = userRepository.getAllUSer()
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")?.asInt()
+                    val retrievedUsers = businessId?.let { it1 -> userRepository.getAllUSer(it1) }
 
-                    call.respond(retrievedUsers)
+                    if (retrievedUsers != null) {
+                        call.respond(retrievedUsers)
+                    }
+
+                    call.respond(HttpStatusCode.UnprocessableEntity, "An error occur while retrieving users!")
                 }
 
                 get("/{id}") {

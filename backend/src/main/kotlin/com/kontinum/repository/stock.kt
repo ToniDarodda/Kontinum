@@ -6,16 +6,16 @@ import com.kontinum.service.stock.dto.StockCreateDTO
 import com.kontinum.service.stock.dto.StockPatchDTO
 
 class StockRepository(private val stockService: StockService) {
-    suspend fun createStock(data: StockCreateDTO): Stock? {
-        return this.stockService.createStock(data)
+    suspend fun createStock(data: StockCreateDTO, businessId: Int): Stock? {
+        return this.stockService.createStock(data, businessId)
     }
 
     suspend fun getStock(stockId: Int): Stock? {
         return this.stockService.getStock(stockId)
     }
 
-    suspend fun getStocks(): List<Stock> {
-        return this.stockService.getStocks()
+    suspend fun getStocks(businessId: Int): List<Stock> {
+        return this.stockService.getStocks(businessId)
     }
 
     suspend fun patchStock(stockId: Int, data: StockPatchDTO): Int {

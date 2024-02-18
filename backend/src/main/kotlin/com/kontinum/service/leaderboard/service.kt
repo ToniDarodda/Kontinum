@@ -16,7 +16,8 @@ class LeaderboardServices : LeaderboardInterface {
     private fun rowToLeaderboard(row: ResultRow) = Leaderboard(
         id = row[Leaderboards.id],
         startTime = row[Leaderboards.startTime],
-        endTime = row[Leaderboards.endTime]
+        endTime = row[Leaderboards.endTime],
+        businessId = row[Leaderboards.businessId]
     )
 
     private fun rowToLeaderboardDetail(row: ResultRow) = LeaderboardDetail(
@@ -25,11 +26,12 @@ class LeaderboardServices : LeaderboardInterface {
         leaderboardId = row[LeaderboardDetails.leaderboardId],
         score = row[LeaderboardDetails.score]
     )
-    override suspend fun createLeaderboard(data: LeaderboardCreateDTO): Leaderboard? {
+    override suspend fun createLeaderboard(data: LeaderboardCreateDTO, businessId: Int): Leaderboard? {
         return transaction {
             val createdLeaderboard = Leaderboards.insert {
                 it[startTime] = data.startTime
                 it[endTime] = data.endTime
+                it[this.businessId] = businessId
             }
 
             createdLeaderboard.resultedValues?.singleOrNull()?.let(::rowToLeaderboard)

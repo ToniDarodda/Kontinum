@@ -5,10 +5,10 @@ import com.kontinum.service.stock.dto.StockCreateDTO
 import com.kontinum.service.stock.dto.StockPatchDTO
 
 interface StockInterface {
-    suspend fun createStock(data: StockCreateDTO): Stock?
+    suspend fun createStock(data: StockCreateDTO, businessId: Int): Stock?
     suspend fun getStock(stockId: Int): Stock?
 
-    suspend fun getStocks(): List<Stock>
+    suspend fun getStocks(businessId: Int): List<Stock>
     suspend fun patchStock(stockId: Int, data: StockPatchDTO): Int
     suspend fun deleteStock(stockId: Int): Unit
 }

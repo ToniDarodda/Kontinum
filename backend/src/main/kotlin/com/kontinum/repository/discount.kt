@@ -6,8 +6,8 @@ import com.kontinum.service.discount.dto.DiscountCreateDTO
 import com.kontinum.service.discount.dto.DiscountPatchDTO
 
 class DiscountRepository(private val discountService: DiscountService) {
-    suspend fun createDiscount(data: DiscountCreateDTO): Discount? {
-        return this.discountService.createDiscount(data)
+    suspend fun createDiscount(data: DiscountCreateDTO, businessId: Int): Discount? {
+        return this.discountService.createDiscount(data, businessId)
     }
 
     suspend fun getDiscount(businessId: Int): List<Discount> {

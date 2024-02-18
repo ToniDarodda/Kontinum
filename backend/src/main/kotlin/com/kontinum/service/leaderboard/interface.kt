@@ -7,7 +7,7 @@ import com.kontinum.service.leaderboard.dto.LeaderboardDetailsCreateDTO
 import com.kontinum.service.leaderboard.dto.LeaderboardPatchDTO
 
 interface LeaderboardInterface {
-    suspend fun createLeaderboard(data: LeaderboardCreateDTO): Leaderboard?
+    suspend fun createLeaderboard(data: LeaderboardCreateDTO, businessId: Int): Leaderboard?
 
     suspend fun createLeaderboardDetails(data: LeaderboardDetailsCreateDTO): LeaderboardDetail?
 

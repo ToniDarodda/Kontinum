@@ -6,12 +6,12 @@ import com.kontinum.service.cocktail.dto.CocktailCreateDTO
 import com.kontinum.service.cocktail.dto.CocktailPatchDTO
 
 class CocktailRepositoryImpl(private val cocktailService: CocktailService) {
-    suspend fun createCocktail(data: CocktailCreateDTO): Cocktail? {
-        return this.cocktailService.createCocktail(data)
+    suspend fun createCocktail(data: CocktailCreateDTO, businessId: Int): Cocktail? {
+        return this.cocktailService.createCocktail(data, businessId)
     }
 
-    suspend fun getCocktails(): List<Cocktail> {
-        return this.cocktailService.getCocktails()
+    suspend fun getCocktails(businessId: Int): List<Cocktail> {
+        return this.cocktailService.getCocktails(businessId)
     }
 
     suspend fun getCocktail(cocktailId: Int): Cocktail? {

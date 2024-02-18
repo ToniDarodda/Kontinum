@@ -10,13 +10,9 @@ import java.time.LocalDateTime
 
 object Purchases : Table() {
     val id = integer("id").autoIncrement()
-
     val userId = integer("userId").references(Users.id, onDelete = null)
-
     val businessId = integer("businessId").references(Business.id, onDelete = ReferenceOption.CASCADE)
-
-    private val purchaseTime = datetime("purchaseTime").default(LocalDateTime.now())
-
+    val purchaseTime = datetime("purchaseTime").default(LocalDateTime.now())
     val totalPrice = integer("totalPrice")
 
     override val primaryKey = PrimaryKey(id)

@@ -8,6 +8,7 @@ import com.kontinum.service.business.dto.BusinessPatchDTO
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -55,23 +56,34 @@ fun Application.businessRouting(businessRepository: BusinessRepository) {
             authenticate("auth-jwt") {
 
                 get("/{id}") {
-                    val params = call.parameters["id"]?.toInt()
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")
 
-                    if (params == null) {
-                        call.respondText("Missing businessId!")
-                    } else {
-                        val retrievedBusiness = businessRepository.getBusiness(params)
-                        if (retrievedBusiness != null) call.respond(retrievedBusiness)
+
+                    val retrievedBusiness = businessId?.asInt()?.let { it1 -> businessRepository.getBusiness(it1) }
+                    if (retrievedBusiness != null) call.respond(retrievedBusiness)
+                    call.respond(HttpStatusCode.NotFound, "BusinessId does not exist: $businessId")
+                }
+
+                get("/users") {
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")
+                    val retrievedUsers = businessId?.asInt()?.let { it1 -> businessRepository.getBusinessUser(it1) }
+
+                    if (retrievedUsers != null) {
+                        call.respond(retrievedUsers)
                     }
-                    call.respond(HttpStatusCode.NotFound, "BusinessId does not exist: $params")
+
+                    call.respond(HttpStatusCode.NotAcceptable, "No users retrieved!")
                 }
 
                 patch("/{id?}") {
-                    val paramId = call.parameters["id"]?.toInt()
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")
                     val param = call.receive<BusinessPatchDTO>()
 
-                    if (paramId != null) {
-                        val patchedUser = businessRepository.patchBusiness(paramId, param)
+                    if (businessId?.asInt() != null) {
+                        val patchedUser = businessRepository.patchBusiness(businessId.asInt()!!, param)
 
                         call.respond(patchedUser)
                     }
@@ -81,12 +93,13 @@ fun Application.businessRouting(businessRepository: BusinessRepository) {
 
                 delete("/{id?}") {
 
-                    val params = call.parameters["id"]?.toInt()
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")?.asInt()
 
-                    if (params == null) {
+                    if (businessId == null) {
                         call.respondText("Missing BusinessId!")
                     } else {
-                        businessRepository.deleteBusiness(params)
+                        businessRepository.deleteBusiness(businessId)
                         call.respondText("Business deleted successfully!")
                     }
                 }

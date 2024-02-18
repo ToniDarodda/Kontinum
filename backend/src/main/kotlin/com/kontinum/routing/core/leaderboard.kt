@@ -7,6 +7,7 @@ import com.kontinum.service.leaderboard.dto.LeaderboardPatchDTO
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -20,8 +21,14 @@ fun Application.leaderboardRouting(leaderboardRepository: LeaderboardRepository)
 
                 post() {
                     val param = call.receive<LeaderboardCreateDTO>()
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")?.asInt()
 
-                    val createdLeaderboard = leaderboardRepository.createLeaderboard(param)
+                    val createdLeaderboard = businessId?.let { it1 ->
+                        leaderboardRepository.createLeaderboard(param,
+                            it1
+                        )
+                    }
 
                     if (createdLeaderboard != null) {
                         call.respond(createdLeaderboard)

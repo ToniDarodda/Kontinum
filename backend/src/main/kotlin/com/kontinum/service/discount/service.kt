@@ -16,12 +16,12 @@ class DiscountService : DiscountInterface {
         onSeveral = row[Discounts.onSeveral],
         businessId = row[Discounts.businessId]
     )
-    override suspend fun createDiscount(data: DiscountCreateDTO): Discount? {
+    override suspend fun createDiscount(data: DiscountCreateDTO, businessId: Int): Discount? {
         return transaction {
             val insertedDiscount = Discounts.insert {
                 it[discountPerServing] = data.discountPerServing
                 it[onSeveral] = data.onSeveral
-                it[businessId] = data.businessId
+                it[this.businessId] = businessId
             }
 
             insertedDiscount.resultedValues?.singleOrNull()?.let(::rowToDiscount)

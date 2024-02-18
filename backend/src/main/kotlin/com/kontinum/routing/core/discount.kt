@@ -6,6 +6,7 @@ import com.kontinum.service.discount.dto.DiscountPatchDTO
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -18,8 +19,10 @@ fun Application.discountRouting(discountRepository: DiscountRepository) {
 
                 post() {
                     val param = call.receive<DiscountCreateDTO>()
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")?.asInt()
 
-                    val createdDiscount = discountRepository.createDiscount(param)
+                    val createdDiscount = businessId?.let { it1 -> discountRepository.createDiscount(param, it1) }
 
                     if (createdDiscount != null) {
                         call.respond(createdDiscount)
@@ -28,16 +31,17 @@ fun Application.discountRouting(discountRepository: DiscountRepository) {
                     call.respond(HttpStatusCode.BadRequest, "Data missing in [Post] Discount!")
                 }
 
-                get("/{id?}") {
-                    val param = call.parameters["id"]?.toInt()
+                get() {
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")?.asInt()
 
-                    val retrievedDiscount = param?.let { it1 -> discountRepository.getDiscount(it1) }
+                    val retrievedDiscount = businessId?.let { it1 -> discountRepository.getDiscount(it1) }
 
                     if (retrievedDiscount != null) {
                         call.respond(retrievedDiscount)
                     }
 
-                    call.respond(HttpStatusCode.NotFound, "No discount found with business Id: $param")
+                    call.respond(HttpStatusCode.NotFound, "No discount found with business Id: $businessId")
                 }
 
                 patch("/{id?}") {
