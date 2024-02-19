@@ -1,16 +1,16 @@
 package com.kontinum.routing.core
 
-import com.kontinum.repository.DiscountRepository
-import com.kontinum.service.discount.dto.DiscountCreateDTO
-import com.kontinum.service.discount.dto.DiscountPatchDTO
+import com.kontinum.repository.DiscountRepositoryImpl
+import com.kontinum.service.discount.dto.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.discountRouting(discountRepository: DiscountRepository) {
+fun Application.discountRouting(discountRepository: DiscountRepositoryImpl) {
     routing {
         route("/discount") {
 
@@ -18,51 +18,71 @@ fun Application.discountRouting(discountRepository: DiscountRepository) {
 
                 post() {
                     val param = call.receive<DiscountCreateDTO>()
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")?.asInt()
 
-                    val createdDiscount = discountRepository.createDiscount(param)
+                    try {
+                        val createdDiscount = businessId?.let { it1 -> discountRepository.createDiscount(param, it1) }
 
-                    if (createdDiscount != null) {
-                        call.respond(createdDiscount)
+                        if (createdDiscount != null) {
+                            call.respond(createdDiscount)
+                            return@post
+                        }
+                        throw Error("Error while creating discount")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
+                        return@post
                     }
 
-                    call.respond(HttpStatusCode.BadRequest, "Data missing in [Post] Discount!")
                 }
 
-                get("/{id?}") {
-                    val param = call.parameters["id"]?.toInt()
+                get() {
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")?.asInt()
 
-                    val retrievedDiscount = param?.let { it1 -> discountRepository.getDiscount(it1) }
+                    try {
+                        val retrievedDiscount = businessId?.let { it1 -> discountRepository.getDiscount(it1) }
 
-                    if (retrievedDiscount != null) {
-                        call.respond(retrievedDiscount)
+                        if (retrievedDiscount != null) {
+                            call.respond(retrievedDiscount)
+                            return@get
+                        }
+                        throw Error("Error while retrieving discount")
+
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
+                        return@get
                     }
 
-                    call.respond(HttpStatusCode.NotFound, "No discount found with business Id: $param")
                 }
 
                 patch("/{id?}") {
-                    val param = call.parameters["id"]?.toInt()
-
+                    val param = call.parameters["id"]!!.toInt()
                     val patchDiscount = call.receive<DiscountPatchDTO>()
 
-                    val patchedDiscount = param?.let { it1 -> discountRepository.patchDiscount(it1, patchDiscount) }
-
-                    if (patchedDiscount != null) {
+                    try {
+                        val patchedDiscount = discountRepository.patchDiscount(param, patchDiscount)
                         call.respond(patchedDiscount)
+                        return@patch
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
+                        return@patch
                     }
-
-                    call.respond(HttpStatusCode.NotAcceptable, "Problem happen when patching discount with id: $param")
                 }
 
                 delete("/{id?}") {
-                    val param = call.parameters["id"]?.toInt()
+                    val param = call.parameters["id"]!!.toInt()
 
-                    if (param != null) {
+                    try {
                         discountRepository.deleteDiscount(param)
                         call.respond("Discount with deleted successfully!")
+                        return@delete
+
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
+                        return@delete
                     }
 
-                    call.respond("Error occurred when deleting discount!")
                 }
 
             }

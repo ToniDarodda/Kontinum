@@ -31,6 +31,9 @@ dependencies {
 
     implementation("at.favre.lib:bcrypt:0.9.0")
 
+    // SLF4J API
+    implementation("org.slf4j:slf4j-api:1.7.30")
+
 
     implementation("io.ktor:ktor-server-auth:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")

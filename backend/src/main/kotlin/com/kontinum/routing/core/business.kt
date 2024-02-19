@@ -1,85 +1,157 @@
 package com.kontinum.routing.core
 
 
-import com.kontinum.repository.BusinessRepository
-import com.kontinum.service.business.dto.BusinessCreateDTO
-import com.kontinum.service.business.dto.BusinessGetDTO
-import com.kontinum.service.business.dto.BusinessPatchDTO
+import com.kontinum.repository.BusinessRepositoryImpl
+import com.kontinum.service.business.dto.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.businessRouting(businessRepository: BusinessRepository) {
+fun Application.businessRouting(businessRepository: BusinessRepositoryImpl) {
     routing {
         route("/business") {
 
-
                 post("/register") {
                     val params = call.receive<BusinessCreateDTO>()
-                    val createdBusiness = businessRepository.createBusiness(params)
 
+                    val isBusinessEmailAlreadyUsed = businessRepository.isBusinessEmailAlreadyExist(params.businessEmail)
 
-                    if (createdBusiness != null) {
-                        call.respond(createdBusiness)
+                    if (isBusinessEmailAlreadyUsed) {
+                        call.respond(HttpStatusCode.Conflict, "Business email already used")
+                        return@post
                     }
 
-                    call.respond(HttpStatusCode.BadRequest,"Error in payload sent to create a business!")
+                    try {
+                        val token = businessRepository.createBusiness(params)
+
+                        if (token != null) {
+                            call.response.cookies.append(
+                                name = "Authorization",
+                                value = token,
+                                secure = false,
+                                httpOnly = true,
+                                path = "/"
+                            )
+                            call.respondText("Business created successfully")
+                            return@post
+                        }
+                        throw Error("Error while registering business")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
+                        return@post
+                    }
+
                 }
 
                 post("/login") {
                     val params = call.receive<BusinessGetDTO>()
-                    println("ici1")
-                    val createdBusiness = businessRepository.loginBusiness(params)
 
+                    try {
+                        val token = businessRepository.loginBusiness(params)
 
-                    if (createdBusiness != null) {
-                        call.respond(createdBusiness)
+                        if (token != null) {
+                            call.response.cookies.append(
+                                name = "Authorization",
+                                value = token,
+                                secure = false,
+                                httpOnly = true,
+                                path = "/"
+                            )
+                            call.respondText(token)
+                            return@post
+                        }
+                        throw Error("Credentials invalid")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.BadRequest, err.message.toString())
+                        return@post
                     }
-                    call.respond(HttpStatusCode.BadRequest,"Credentials invalid!")
                 }
+
 
             authenticate("auth-jwt") {
-                patch("/{id?}") {
-                    val paramId = call.parameters["id"]?.toInt()
+
+                get() {
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")
+
+
+                    try {
+                        val retrievedBusiness = businessId?.asInt()?.let { it1 -> businessRepository.getBusiness(it1) }
+                        if (retrievedBusiness != null) {
+                            call.respond(retrievedBusiness)
+                            return@get
+                        }
+                        throw Error("Error while retrieving business")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
+                        return@get
+                    }
+                }
+
+                get("/users") {
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")
+
+                    try {
+                        val retrievedUsers = businessId?.asInt()?.let { it1 -> businessRepository.getBusinessUser(it1) }
+
+                        if (retrievedUsers != null) {
+                            call.respond(retrievedUsers)
+                            return@get
+                        }
+                        throw Error("Error while retrieving users of a business")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
+                        return@get
+                    }
+
+                }
+
+                patch() {
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")
                     val param = call.receive<BusinessPatchDTO>()
 
-                    if (paramId != null) {
-                        val patchedUser = businessRepository.patchBusiness(paramId, param)
+                    try {
+                        if (businessId?.asInt() != null) {
+                            val patchedUser = businessRepository.patchBusiness(businessId.asInt()!!, param)
 
-                        call.respond(patchedUser)
+                            call.respond(patchedUser)
+                            return@patch
+                        }
+                        throw Error("Error while patching business")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
+                        return@patch
                     }
 
-                    call.respond(HttpStatusCode.NotFound, "BusinessId not found: $param")
                 }
 
-                get("/{id}") {
-                    val params = call.parameters["id"]?.toInt()
+                delete() {
 
-                    if (params == null) {
-                        call.respondText("Missing businessId!")
-                    } else {
-                        val retrievedBusiness = businessRepository.getBusiness(params)
-                        if (retrievedBusiness != null) call.respond(retrievedBusiness)
-                    }
-                    call.respond(HttpStatusCode.NotFound, "BusinessId does not exist: $params")
-                }
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")?.asInt()
 
-                delete("/{id?}") {
-                    val params = call.parameters["id"]?.toInt()
-
-                    if (params == null) {
+                    if (businessId == null) {
                         call.respondText("Missing BusinessId!")
-                    } else {
-                        businessRepository.deleteBusiness(params)
+                        return@delete
+                    }
+
+                    try {
+                        businessRepository.deleteBusiness(businessId)
                         call.respondText("Business deleted successfully!")
+                        return@delete
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
+                        return@delete
                     }
                 }
 
             }
         }
-
     }
 }

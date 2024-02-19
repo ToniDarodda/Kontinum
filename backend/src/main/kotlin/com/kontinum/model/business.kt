@@ -2,6 +2,7 @@ package com.kontinum.model
 
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Table
+import java.time.LocalDateTime
 
 
 object Business : Table() {
@@ -10,8 +11,9 @@ object Business : Table() {
     val businessLocation = varchar("businessLocation", 255)
     val businessLegalInformation = varchar("businessLegalInformation", 255)
     val businessPhoneNumber = varchar("businessPhoneNumber", 15)
-    val businessEmail = varchar("businessEmail", 255)
+    val businessEmail = varchar("businessEmail", 255).uniqueIndex()
     val password = varchar("password", 255)
+    val createdAt = varchar("createdAt", 255).default(LocalDateTime.now().toString())
 
     override val primaryKey = PrimaryKey(id)
 

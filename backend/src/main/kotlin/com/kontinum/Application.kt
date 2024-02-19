@@ -15,18 +15,28 @@ import com.kontinum.service.purchase.PurchaseService
 import com.kontinum.service.purchaseDetail.PurchaseDetailsService
 import com.kontinum.service.stock.StockService
 import com.kontinum.service.user.UserService
-import com.kontinum.util.auth
-import com.kontinum.util.contentNegotiation
+import com.kontinum.util.*
+import com.typesafe.config.ConfigFactory
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 
 fun main() {
-    embeddedServer(Netty, port = 8080, host = "localhost") {
+    val config = ConfigFactory.load()
+    val hostKey = config.getString("server.host")
+    val portKey = config.getString("server.port").toInt()
+
+    val secret = config.getString("jwt.secret")
+    val issuer = config.getString("jwt.issuer")
+    val audience = config.getString("jwt.audience")
+
+    val tokenManager = TokenManager(audience, issuer, secret)
+
+    embeddedServer(Netty, port = portKey, host = hostKey) {
 
         DatabaseSingleton.init()
 
-        val businessService = BusinessService()
-        val businessRepository = BusinessRepository(businessService)
+        val businessService = BusinessService(tokenManager)
+        val businessRepository = BusinessRepositoryImpl(businessService)
 
         val userService = UserService()
         val userRepository = UserRepositoryImpl(userService)
@@ -35,21 +45,22 @@ fun main() {
         val cocktailRepository = CocktailRepositoryImpl(cocktailService)
 
         val stockService = StockService()
-        val stockRepository = StockRepository(stockService)
+        val stockRepository = StockRepositoryImpl(stockService)
 
         val discountService = DiscountService()
-        val discountRepository = DiscountRepository(discountService)
+        val discountRepository = DiscountRepositoryImpl(discountService)
 
         val purchaseService = PurchaseService()
-        val purchaseRepository = PurchaseRepository(purchaseService)
+        val purchaseRepository = PurchaseRepositoryImpl(purchaseService)
 
         val purchaseDetailService = PurchaseDetailsService()
-        val purchaseDetailRepository = PurchaseDetailRepository(purchaseDetailService)
+        val purchaseDetailRepository = PurchaseDetailRepositoryImpl(purchaseDetailService)
 
         val leaderboardServices = LeaderboardServices()
-        val leaderboardRepository = LeaderboardRepository(leaderboardServices)
+        val leaderboardRepository = LeaderboardRepositoryImpl(leaderboardServices)
 
-        auth()
+        cors()
+        auth(secret, issuer)
         contentNegotiation()
         configureRouting()
 

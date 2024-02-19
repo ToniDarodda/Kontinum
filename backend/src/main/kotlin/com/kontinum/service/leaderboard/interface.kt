@@ -1,13 +1,10 @@
 package com.kontinum.service.leaderboard
 
-import com.kontinum.model.leaderboard.Leaderboard
-import com.kontinum.model.leaderboard.LeaderboardDetail
-import com.kontinum.service.leaderboard.dto.LeaderboardCreateDTO
-import com.kontinum.service.leaderboard.dto.LeaderboardDetailsCreateDTO
-import com.kontinum.service.leaderboard.dto.LeaderboardPatchDTO
+import com.kontinum.model.leaderboard.*
+import com.kontinum.service.leaderboard.dto.*
 
 interface LeaderboardInterface {
-    suspend fun createLeaderboard(data: LeaderboardCreateDTO): Leaderboard?
+    suspend fun createLeaderboard(data: LeaderboardCreateDTO, businessId: Int): Leaderboard?
 
     suspend fun createLeaderboardDetails(data: LeaderboardDetailsCreateDTO): LeaderboardDetail?
 

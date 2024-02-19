@@ -1,16 +1,16 @@
 package com.kontinum.routing.core
 
-import com.kontinum.repository.StockRepository
-import com.kontinum.service.stock.dto.StockCreateDTO
-import com.kontinum.service.stock.dto.StockPatchDTO
+import com.kontinum.repository.StockRepositoryImpl
+import com.kontinum.service.stock.dto.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.stocksRouting(stockRepository: StockRepository) {
+fun Application.stocksRouting(stockRepository: StockRepositoryImpl) {
     routing {
         route("/stock") {
 
@@ -18,52 +18,84 @@ fun Application.stocksRouting(stockRepository: StockRepository) {
 
                 post() {
                     val param = call.receive<StockCreateDTO>()
-                    val createdStock = stockRepository.createStock(param)
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")?.asInt()
 
-                    if (createdStock != null) {
-                        call.respond(createdStock)
+                    try {
+                        val createdStock = businessId?.let { it1 -> stockRepository.createStock(param, it1) }
+
+                        if (createdStock != null) {
+                            call.respond(createdStock)
+                            return@post
+                        }
+                        throw Error("Error while creating stock")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
+                        return@post
                     }
-                    call.respond(HttpStatusCode.BadRequest, "Missing value for the request [Post -> Stocks]!")
                 }
 
                 get() {
-                    val retrievedStocks = stockRepository.getStocks()
-                    println(retrievedStocks)
-                    if (retrievedStocks.isNotEmpty()) {
-                        call.respond(retrievedStocks)
+
+                    val principal = call.principal<JWTPrincipal>()
+                    val businessId = principal?.payload?.getClaim("userId")?.asInt()
+                    try {
+                        val retrievedStocks = businessId?.let { it1 -> stockRepository.getStocks(it1) }
+
+                        if (retrievedStocks?.isNotEmpty() == true) {
+                            call.respond(retrievedStocks)
+                            return@get
+                        }
+                        throw Error("Error while retrieving stock")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
+                        return@get
                     }
 
-                    call.respond(HttpStatusCode.NotFound, "No Stock found!")
                 }
 
                 get("/{id?}") {
-                    val param = call.parameters["id"]
+                    val param = call.parameters["id"]!!.toInt()
 
-                    val retrievedStock = param?.let { it1 -> stockRepository.getStock(it1.toInt()) }
+                    try {
+                        val retrievedStock = stockRepository.getStock(param)
 
-                    if (retrievedStock != null) {
-                        call.respond(retrievedStock)
+                        if (retrievedStock != null) {
+                            call.respond(retrievedStock)
+                            return@get
+                        }
+                        throw Error("Error retrieving stock")
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"));
+                        return@get
                     }
 
-                    call.respond(HttpStatusCode.NotFound, "No Stock found with id $param")
                 }
 
                 patch("/{id?}") {
-                    val param = call.parameters["id"]
+                    val param = call.parameters["id"]!!.toInt()
                     val patchStockData = call.receive<StockPatchDTO>()
 
-                    if (param != null) {
-                        val numberOfStockPatched = stockRepository.patchStock(param.toInt(), patchStockData)
+                    try {
+                        val numberOfStockPatched = stockRepository.patchStock(param, patchStockData)
                         call.respond(numberOfStockPatched)
+                        return@patch
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
+                        return@patch
                     }
                 }
 
                 delete("/{id?}") {
-                    val param = call.parameters["id"]
+                    val param = call.parameters["id"]!!.toInt()
 
-                    if (param != null) {
+                    try {
                         stockRepository.deleteStock(param.toInt())
                         call.respond(HttpStatusCode.NoContent, "Stock deleted successfully!")
+                        return@delete
+                    } catch (err: Error) {
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
+                        return@delete
                     }
 
                 }

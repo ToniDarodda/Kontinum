@@ -1,11 +1,10 @@
 package com.kontinum.service.discount
 
 import com.kontinum.model.Discount
-import com.kontinum.service.discount.dto.DiscountCreateDTO
-import com.kontinum.service.discount.dto.DiscountPatchDTO
+import com.kontinum.service.discount.dto.*
 
 interface DiscountInterface {
-    suspend fun createDiscount(data: DiscountCreateDTO): Discount?
+    suspend fun createDiscount(data: DiscountCreateDTO, businessId: Int): Discount?
 
     suspend fun getDiscount(businessId: Int): List<Discount>
 

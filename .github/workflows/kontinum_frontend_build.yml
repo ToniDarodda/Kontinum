@@ -1,4 +1,4 @@
-name: CI
+name: kontinum_frontend_build
 
 on:
   push:
