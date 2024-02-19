@@ -1,7 +1,5 @@
 import React from "react";
 
-import styled from "styled-components";
-
 import { Card } from "../components/card/card";
 import { Info } from "../components/card/info/info";
 import { Leaderboard } from "../components/card/leaderboard/leaderboard";
@@ -9,24 +7,18 @@ import Navbar from "../components/navbar/navbar";
 import { NavigationButtonOption } from "../components/navbar/navigation/navigation";
 import { Stats } from "../components/stats/stats";
 import { KontinumP } from "../components/title/title.style";
-import { KontinumDiv, MultiSubContainer } from "../global/global.style";
-
-const Div = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  background-color: #fcfbfb;
-  margin: 8px 4px;
-  border-radius: 8px;
-  border: 1px solid #ecebeb;
-`;
+import {
+  DashboardDiv,
+  KontinumDiv,
+  MultiSubContainer,
+} from "../global/global.style";
 
 export function Dashboard(): React.ReactElement {
   return (
     <>
       <Navbar defaultOption={NavigationButtonOption.DASHBOARD} />
       <KontinumDiv>
-        <Div>
+        <DashboardDiv>
           <MultiSubContainer
             justifyContent={"space-between"}
             margin={"8px"}
@@ -50,7 +42,7 @@ export function Dashboard(): React.ReactElement {
           <MultiSubContainer margin={"8px"}>
             <Leaderboard></Leaderboard>
           </MultiSubContainer>
-        </Div>
+        </DashboardDiv>
         <Stats />
       </KontinumDiv>
     </>

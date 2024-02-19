@@ -20,6 +20,29 @@ export const GlobalStyles = createGlobalStyle`
 
 `;
 
+export const DashboardDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: #fcfbfb;
+  margin: 8px 4px;
+  border-radius: 8px;
+  border: 1px solid #ecebeb;
+`;
+
+export const UserDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  background-color: #fcfbfb;
+  margin: 8px 4px;
+  border-radius: 8px;
+  border: 1px solid #ecebeb;
+`;
+
 export const KontinumDiv = styled.div<{ margin?: string }>`
   display: flex;
   flex-direction: row;

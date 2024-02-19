@@ -1,7 +1,6 @@
 import React from "react";
 
 import { SubmitHandler, useForm } from "react-hook-form";
-import styled from "styled-components";
 
 import { KontinumButton } from "../components/button/button.style";
 import { UserCard } from "../components/card/user/user.style";
@@ -11,21 +10,12 @@ import Navbar from "../components/navbar/navbar";
 import { NavigationButtonOption } from "../components/navbar/navigation/navigation";
 import { Stats } from "../components/stats/stats";
 import { KontinumP } from "../components/title/title.style";
-import { KontinumDiv, MultiSubContainer } from "../global/global.style";
+import {
+  KontinumDiv,
+  MultiSubContainer,
+  UserDiv,
+} from "../global/global.style";
 import { useCreateUser, useGetUsers } from "../query";
-
-const Div = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  width: 100%;
-  background-color: #fcfbfb;
-  margin: 8px 4px;
-  border-radius: 8px;
-  border: 1px solid #ecebeb;
-`;
 
 type Inputs = {
   firstName: string;
@@ -48,7 +38,7 @@ export function Users(): React.ReactElement {
     <>
       <Navbar defaultOption={NavigationButtonOption.USERS} />
       <KontinumDiv>
-        <Div>
+        <UserDiv>
           <KontinumForm
             onSubmit={handleSubmit(onSubmit)}
             style={{
@@ -119,7 +109,7 @@ export function Users(): React.ReactElement {
               })}
             </MultiSubContainer>
           </MultiSubContainer>
-        </Div>
+        </UserDiv>
         <Stats />
       </KontinumDiv>
     </>
