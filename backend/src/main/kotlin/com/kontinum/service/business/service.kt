@@ -27,6 +27,19 @@ class BusinessService(private val tokenManager: TokenManager) : BusinessInterfac
         businessLocation = row[Business.businessLocation],
         password = row[Business.password]
     )
+
+    suspend fun isBusinessEmailAlreadyExist(businessEmail: String): Boolean {
+        val retrievedBusiness = transaction {
+            val business = Business.selectAll().where { Business.businessEmail eq businessEmail }
+            business.singleOrNull()?.let(::rowToBusiness)
+        }
+
+        if (retrievedBusiness != null) {
+            return true
+        }
+
+        return false
+    }
     override suspend fun createBusiness(data: BusinessCreateDTO): String? {
          val createdBusiness = transaction {
             val createdBusiness = Business.insert {

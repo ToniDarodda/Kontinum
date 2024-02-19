@@ -9,6 +9,10 @@ class CocktailRepositoryImpl(private val cocktailService: CocktailService) {
         return this.cocktailService.createCocktail(data, businessId)
     }
 
+    suspend fun isCocktailNameExist(cocktailName: String): Boolean {
+        return this.cocktailService.isCocktailNameExist(cocktailName)
+    }
+
     suspend fun getCocktails(businessId: Int): List<Cocktail> {
         return this.cocktailService.getCocktails(businessId)
     }

@@ -30,7 +30,7 @@ fun Application.discountRouting(discountRepository: DiscountRepositoryImpl) {
                         }
                         throw Error("Error while creating discount")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                         return@post
                     }
 
@@ -50,7 +50,7 @@ fun Application.discountRouting(discountRepository: DiscountRepositoryImpl) {
                         throw Error("Error while retrieving discount")
 
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                         return@get
                     }
 
@@ -65,7 +65,7 @@ fun Application.discountRouting(discountRepository: DiscountRepositoryImpl) {
                         call.respond(patchedDiscount)
                         return@patch
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@patch
                     }
                 }
@@ -79,7 +79,7 @@ fun Application.discountRouting(discountRepository: DiscountRepositoryImpl) {
                         return@delete
 
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity,err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@delete
                     }
 

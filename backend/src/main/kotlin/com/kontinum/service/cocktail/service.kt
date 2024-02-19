@@ -16,12 +16,22 @@ class CocktailService : CocktailInterface {
         businessId = row[Cocktails.businessId]
     )
 
-    override suspend fun createCocktail(data: CocktailCreateDTO, bussId: Int): Cocktail? {
+    suspend fun isCocktailNameExist(cocktailName: String): Boolean {
+        val retrievedCocktail = transaction {
+            val rCocktail = Cocktails.selectAll().where { Cocktails.name eq cocktailName }
+
+            rCocktail.singleOrNull()?.let(::cocktailToRow)
+        }
+
+        return retrievedCocktail != null;
+    }
+
+    override suspend fun createCocktail(data: CocktailCreateDTO, businessId: Int): Cocktail? {
         return transaction {
             val createdCocktail = Cocktails.insert {
                 it[name] = data.name
                 it[pricePerServing] = data.pricePerServing
-                it[businessId] = bussId
+                it[this.businessId] = businessId
             }
 
             createdCocktail.resultedValues?.singleOrNull()?.let(::cocktailToRow)

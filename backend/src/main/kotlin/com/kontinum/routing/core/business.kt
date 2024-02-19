@@ -18,6 +18,13 @@ fun Application.businessRouting(businessRepository: BusinessRepositoryImpl) {
                 post("/register") {
                     val params = call.receive<BusinessCreateDTO>()
 
+                    val isBusinessEmailAlreadyUsed = businessRepository.isBusinessEmailAlreadyExist(params.businessEmail)
+
+                    if (isBusinessEmailAlreadyUsed) {
+                        call.respond(HttpStatusCode.Conflict, "Business email already used")
+                        return@post
+                    }
+
                     try {
                         val token = businessRepository.createBusiness(params)
 
@@ -34,7 +41,7 @@ fun Application.businessRouting(businessRepository: BusinessRepositoryImpl) {
                         }
                         throw Error("Error while registering business")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity,err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                         return@post
                     }
 
@@ -57,9 +64,9 @@ fun Application.businessRouting(businessRepository: BusinessRepositoryImpl) {
                             call.respondText(token)
                             return@post
                         }
-                        throw Error("Error while login business")
+                        throw Error("Credentials invalid")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.BadRequest,err)
+                        call.respond(HttpStatusCode.BadRequest, err.message.toString())
                         return@post
                     }
                 }
@@ -80,7 +87,7 @@ fun Application.businessRouting(businessRepository: BusinessRepositoryImpl) {
                         }
                         throw Error("Error while retrieving business")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                         return@get
                     }
                 }
@@ -98,7 +105,7 @@ fun Application.businessRouting(businessRepository: BusinessRepositoryImpl) {
                         }
                         throw Error("Error while retrieving users of a business")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                         return@get
                     }
 
@@ -118,7 +125,7 @@ fun Application.businessRouting(businessRepository: BusinessRepositoryImpl) {
                         }
                         throw Error("Error while patching business")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                         return@patch
                     }
 
@@ -139,7 +146,7 @@ fun Application.businessRouting(businessRepository: BusinessRepositoryImpl) {
                         call.respondText("Business deleted successfully!")
                         return@delete
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                         return@delete
                     }
                 }

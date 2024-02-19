@@ -19,12 +19,12 @@ fun Application.userRouting(userRepository: UserRepositoryImpl) {
             authenticate("auth-jwt") {
 
                 post() {
-                    val params = call.receive<UserCreateDTO>()
+                    val param = call.receive<UserCreateDTO>()
                     val principal = call.principal<JWTPrincipal>()
                     val businessId = principal?.payload?.getClaim("userId")?.asInt()
 
                     try {
-                        val createdUser = businessId?.let { it1 -> userRepository.registerUser(params, it1) }
+                        val createdUser = businessId?.let { it1 -> userRepository.registerUser(param, it1) }
 
                         if (createdUser != null) {
                             call.respond(createdUser)
@@ -32,7 +32,7 @@ fun Application.userRouting(userRepository: UserRepositoryImpl) {
                         }
                         throw Error("Error while creating user")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity,err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                         return@post
                     }
 
@@ -47,7 +47,7 @@ fun Application.userRouting(userRepository: UserRepositoryImpl) {
                         call.respond(patchedUser)
                         return@patch
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@patch
                     }
 
@@ -67,37 +67,37 @@ fun Application.userRouting(userRepository: UserRepositoryImpl) {
                         throw Error("Error while retrieving business user")
 
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                         return@get
                     }
                 }
 
                 get("/{id}") {
-                    val params = call.parameters["id"]!!.toInt()
+                    val param = call.parameters["id"]!!.toInt()
 
                     try {
-                        val retrievedUser = userRepository.getUserById(params)
+                        val retrievedUser = userRepository.getUserById(param)
                         if (retrievedUser != null) {
                             call.respond(retrievedUser)
                             return@get
                         }
                         throw Error("Error while retrieving users")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@get
                     }
 
                 }
 
                 delete("/{id?}") {
-                    val params = call.parameters["id"]!!.toInt()
+                    val param = call.parameters["id"]!!.toInt()
 
                     try {
-                        userRepository.deleteUserById(params)
+                        userRepository.deleteUserById(param)
                         call.respondText("User deleted successfully!")
                         return@delete
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@delete
                     }
                 }

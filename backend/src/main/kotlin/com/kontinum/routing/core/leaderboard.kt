@@ -36,7 +36,7 @@ fun Application.leaderboardRouting(leaderboardRepository: LeaderboardRepositoryI
                         throw Error("Error while creating leaderboard")
 
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                         return@post
                     }
 
@@ -55,7 +55,7 @@ fun Application.leaderboardRouting(leaderboardRepository: LeaderboardRepositoryI
                         }
                         throw Error("Error while retrieving leaderboard")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@get
                     }
 
@@ -72,7 +72,7 @@ fun Application.leaderboardRouting(leaderboardRepository: LeaderboardRepositoryI
                         return@patch
 
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.NotFound, err)
+                        call.respond(HttpStatusCode.NotFound, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@patch
                     }
                 }
@@ -85,7 +85,7 @@ fun Application.leaderboardRouting(leaderboardRepository: LeaderboardRepositoryI
                         call.respond("Purchase deleted successfully!")
                         return@delete
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@delete
                     }
 
@@ -110,7 +110,7 @@ fun Application.leaderboardRouting(leaderboardRepository: LeaderboardRepositoryI
                             throw Error("Error while creating leaderboard details")
 
                         } catch (err: Error) {
-                            call.respond(HttpStatusCode.UnprocessableEntity, err)
+                            call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                             return@post
                         }
 
@@ -128,7 +128,7 @@ fun Application.leaderboardRouting(leaderboardRepository: LeaderboardRepositoryI
                             }
                             throw Error("Error while creating many leaderboard details")
                         } catch (err: Error) {
-                            call.respond(HttpStatusCode.UnprocessableEntity, err)
+                            call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                             return@post
                         }
 
@@ -143,7 +143,7 @@ fun Application.leaderboardRouting(leaderboardRepository: LeaderboardRepositoryI
                             call.respond(retrievedLeaderboardDetails)
                             return@get
                         } catch (err: Error) {
-                            call.respond(HttpStatusCode.UnprocessableEntity, err)
+                            call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                             return@get
                         }
 

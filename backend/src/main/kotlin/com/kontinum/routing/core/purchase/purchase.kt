@@ -28,7 +28,7 @@ fun Application.purchaseRouting(purchaseRepository: PurchaseRepositoryImpl) {
 
                         throw Error("Error while creating purchase")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.Unauthorized, err)
+                        call.respond(HttpStatusCode.Unauthorized, err.message.toString())
                         return@post
                     }
 
@@ -42,7 +42,7 @@ fun Application.purchaseRouting(purchaseRepository: PurchaseRepositoryImpl) {
                         call.respond(retrievedPurchases)
                         return@get
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@get
                     }
 
@@ -60,7 +60,7 @@ fun Application.purchaseRouting(purchaseRepository: PurchaseRepositoryImpl) {
                         }
                         throw Error("Error while retrieving purchase")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@get
                     }
 
@@ -74,7 +74,7 @@ fun Application.purchaseRouting(purchaseRepository: PurchaseRepositoryImpl) {
                         call.respond(retrievedPurchases)
                         return@get
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@get
                     }
 
@@ -89,7 +89,7 @@ fun Application.purchaseRouting(purchaseRepository: PurchaseRepositoryImpl) {
                         call.respond(patchedPurchase)
                         return@patch
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@patch
                     }
 
@@ -102,7 +102,7 @@ fun Application.purchaseRouting(purchaseRepository: PurchaseRepositoryImpl) {
                         call.respond("Purchase deleted successfully!")
                         return@delete
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@delete
                     }
                 }

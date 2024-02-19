@@ -6,6 +6,10 @@ import com.kontinum.service.business.BusinessService
 import com.kontinum.service.business.dto.*
 
 class BusinessRepositoryImpl(private val businessService: BusinessService) {
+
+    suspend fun isBusinessEmailAlreadyExist(businessEmail: String): Boolean {
+        return this.businessService.isBusinessEmailAlreadyExist(businessEmail)
+    }
     suspend fun createBusiness(data: BusinessCreateDTO): String? {
         return this.businessService.createBusiness(data)
     }

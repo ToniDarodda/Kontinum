@@ -30,7 +30,7 @@ fun Application.stocksRouting(stockRepository: StockRepositoryImpl) {
                         }
                         throw Error("Error while creating stock")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                         return@post
                     }
                 }
@@ -48,7 +48,7 @@ fun Application.stocksRouting(stockRepository: StockRepositoryImpl) {
                         }
                         throw Error("Error while retrieving stock")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                         return@get
                     }
 
@@ -66,7 +66,7 @@ fun Application.stocksRouting(stockRepository: StockRepositoryImpl) {
                         }
                         throw Error("Error retrieving stock")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err);
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"));
                         return@get
                     }
 
@@ -81,7 +81,7 @@ fun Application.stocksRouting(stockRepository: StockRepositoryImpl) {
                         call.respond(numberOfStockPatched)
                         return@patch
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@patch
                     }
                 }
@@ -94,7 +94,7 @@ fun Application.stocksRouting(stockRepository: StockRepositoryImpl) {
                         call.respond(HttpStatusCode.NoContent, "Stock deleted successfully!")
                         return@delete
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@delete
                     }
 

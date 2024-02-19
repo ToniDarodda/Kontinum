@@ -20,6 +20,12 @@ fun Application.cocktailRouting(cocktailRepository: CocktailRepositoryImpl) {
                     val businessId = principal?.payload?.getClaim("userId")?.asInt()
                     val params = call.receive<CocktailCreateDTO>()
 
+                    val isCocktailNameAlreadyUsed = cocktailRepository.isCocktailNameExist(params.name)
+
+                    if (isCocktailNameAlreadyUsed) {
+                        call.respond(HttpStatusCode.Conflict, "Cocktail name already used")
+                    }
+
                     try {
                         val createdCocktail = businessId?.let { it1 -> cocktailRepository.createCocktail(params, it1) }
 
@@ -30,7 +36,7 @@ fun Application.cocktailRouting(cocktailRepository: CocktailRepositoryImpl) {
                         throw Error("Error while creating cocktail")
 
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                         return@post
                     }
 
@@ -48,7 +54,7 @@ fun Application.cocktailRouting(cocktailRepository: CocktailRepositoryImpl) {
                         }
                         throw Error("Error while retrieving cocktails for a business")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                         return@get
                     }
 
@@ -67,7 +73,7 @@ fun Application.cocktailRouting(cocktailRepository: CocktailRepositoryImpl) {
                         throw Error("Error while retrieving cocktail")
 
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $params"))
                         return@get
                     }
 
@@ -78,13 +84,12 @@ fun Application.cocktailRouting(cocktailRepository: CocktailRepositoryImpl) {
                     val patchCocktailObj = call.receive<CocktailPatchDTO>()
 
                     try {
-
                         val patchedCocktailNumber = cocktailRepository.patchCocktail(param, patchCocktailObj)
 
                         call.respond(patchedCocktailNumber)
                         return@patch
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@patch
                     }
 
@@ -99,12 +104,11 @@ fun Application.cocktailRouting(cocktailRepository: CocktailRepositoryImpl) {
                         call.respondText("Cocktails has been deleted successfully!")
                         return@delete
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@delete
                     }
 
                 }
-
             }
         }
     }

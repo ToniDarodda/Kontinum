@@ -27,7 +27,7 @@ fun Application.purchaseDetail(purchaseDetailRepository: PurchaseDetailRepositor
                         }
                         throw Error("Error while creating detail")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString())
                         return@post
                     }
 
@@ -45,7 +45,7 @@ fun Application.purchaseDetail(purchaseDetailRepository: PurchaseDetailRepositor
                         }
                         throw Error("Error while retrieving purchase detail")
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@get
                     }
 
@@ -59,7 +59,7 @@ fun Application.purchaseDetail(purchaseDetailRepository: PurchaseDetailRepositor
                         call.respond(retrievedPurchaseDetail)
                         return@get
                     } catch (err: Error) {
-                       call.respond(HttpStatusCode.UnprocessableEntity, err)
+                       call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@get
                     }
 
@@ -73,7 +73,7 @@ fun Application.purchaseDetail(purchaseDetailRepository: PurchaseDetailRepositor
                         call.respond(retrievedPurchaseDetails)
                         return@get
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@get
                     }
 
@@ -88,7 +88,7 @@ fun Application.purchaseDetail(purchaseDetailRepository: PurchaseDetailRepositor
                         return@delete
 
                     } catch (err: Error) {
-                        call.respond(HttpStatusCode.UnprocessableEntity, err)
+                        call.respond(HttpStatusCode.UnprocessableEntity, err.message.toString().plus(", ").plus("Requested id may be wrong id: $param"))
                         return@delete
                     }
 
