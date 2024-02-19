@@ -2,7 +2,6 @@ import React from "react";
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
 import { Image } from "../components";
 import { KontinumButton } from "../components/button/button.style";
@@ -93,7 +92,7 @@ export function Login(): React.ReactElement {
             margin={"20px 0px 32px 0px"}
             onClick={redirectRegister}
           >
-            You don't have an account yet?
+            {"You don't have an account yet?"}
           </KontinumP>
 
           <MultiSubContainer padding={"80px"}>

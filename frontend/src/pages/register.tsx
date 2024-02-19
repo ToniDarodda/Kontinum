@@ -17,7 +17,6 @@ import {
 import { RegisterFlow } from "../constants/pages/register";
 import {
   ContainerRegister,
-  KontinumDiv,
   KontinumRegisterDiv,
   MultiSubContainer,
 } from "../global/global.style";
@@ -52,7 +51,7 @@ export function Register(): React.ReactElement {
       mutate(
         {
           ...data,
-          businessLegalInformation: "",
+          businessLegalInformation: "A-ao124",
         },
         {
           onSuccess: () => navigate("/dashboard"),

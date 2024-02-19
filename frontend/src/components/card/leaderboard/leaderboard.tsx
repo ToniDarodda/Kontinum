@@ -8,6 +8,7 @@ import { Wrapper } from "../card.style";
 import { InfoCard } from "../info/info.style";
 
 export function Leaderboard() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [leaderboard, setLeaderboard] = useState<UserType[]>([
     {
       id: "1",

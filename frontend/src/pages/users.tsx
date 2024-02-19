@@ -33,11 +33,7 @@ type Inputs = {
   email: string;
 };
 export function Users(): React.ReactElement {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>();
+  const { register, handleSubmit } = useForm<Inputs>();
 
   const { mutate: createUser } = useCreateUser();
   const { data } = useGetUsers();
@@ -114,7 +110,7 @@ export function Users(): React.ReactElement {
             >
               {data?.map((d) => {
                 return (
-                  <UserCard id={d.id}>
+                  <UserCard key={d.id}>
                     <KontinumP color={"#ffffff"}>
                       {d.lastName} {d.firstName}
                     </KontinumP>

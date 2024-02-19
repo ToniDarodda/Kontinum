@@ -5,6 +5,7 @@ import { MultiSubContainer } from "../../../global/global.style";
 import { KontinumP } from "../../title/title.style";
 
 export function Sale() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [sale, setSale] = useState([
     {
       price: "$54.00",

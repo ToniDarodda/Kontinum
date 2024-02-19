@@ -6,6 +6,7 @@ import { KontinumP } from "../../title/title.style";
 import { Wrapper } from "../card.style";
 
 export function Info() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [stock, setStock] = useState([
     {
       id: "1",
