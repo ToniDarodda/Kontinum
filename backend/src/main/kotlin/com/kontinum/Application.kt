@@ -27,7 +27,6 @@ fun main() {
 
     val secret = config.getString("jwt.secret")
     val issuer = config.getString("jwt.issuer")
-    val realm = config.getString("jwt.realm")
     val audience = config.getString("jwt.audience")
 
     val tokenManager = TokenManager(audience, issuer, secret)
@@ -61,7 +60,7 @@ fun main() {
         val leaderboardRepository = LeaderboardRepositoryImpl(leaderboardServices)
 
         cors()
-        auth(secret, issuer, realm)
+        auth(secret, issuer)
         contentNegotiation()
         configureRouting()
 

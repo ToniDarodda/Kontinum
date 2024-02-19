@@ -7,11 +7,10 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 
-fun Application.auth(secret: String, issuer: String, myRealm: String) {
+fun Application.auth(secret: String, issuer: String) {
 
     install(Authentication) {
         jwt("auth-jwt") {
-            realm = myRealm
             val jwtAlgorithm = Algorithm.HMAC256(secret)
             verifier(JWT.require(jwtAlgorithm).withIssuer(issuer).build())
 
