@@ -44,7 +44,7 @@ export function Info() {
       <Wrapper fd={"row"} justifyContent={"space-between"} w={"100%"}>
         {stock.map((s) => {
           return (
-            <DrinkInfo>
+            <DrinkInfo key={s.id}>
               <MultiSubContainer margin={"8px"}>
                 <KontinumP>{s.drinkName}</KontinumP>
               </MultiSubContainer>

@@ -15,8 +15,10 @@ export const useCreateDiscount = () => {
   return useMutation({
     mutationKey: [MutationKeyCreateDiscount],
     mutationFn: discountService.createDiscount,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: [MutationKeyGetAllDiscount] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [MutationKeyGetAllDiscount],
+      });
     },
   });
 };
@@ -40,8 +42,10 @@ export const usePatchDiscount = () => {
     mutationKey: [MutationKeyPatchDiscount],
     mutationFn: (params: { userId: string; patchData: PatchDiscountType }) =>
       discountService.patchDiscount(params.userId, params.patchData),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: [MutationKeyGetAllDiscount] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [MutationKeyGetAllDiscount],
+      });
     },
   });
 };
@@ -52,7 +56,9 @@ export const useDeleteDiscount = () => {
   return useMutation({
     mutationKey: [MutationKeyDeleteDiscount],
     mutationFn: discountService.deleteDiscount,
-    onSuccess: (data) =>
-      queryClient.invalidateQueries({ queryKey: [MutationKeyGetAllDiscount] }),
+    onSuccess: async () =>
+      await queryClient.invalidateQueries({
+        queryKey: [MutationKeyGetAllDiscount],
+      }),
   });
 };

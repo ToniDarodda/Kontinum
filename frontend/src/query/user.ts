@@ -19,7 +19,7 @@ export const useCreateUser = () => {
   return useMutation({
     mutationKey: [MutationKeyCreateUser],
     mutationFn: userService.createUser,
-    onSuccess: async (data) => {
+    onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: [MutationKeyGetAllUser],
       });
@@ -52,8 +52,10 @@ export const useDeleteUser = () => {
   return useMutation({
     mutationKey: [MutationKeyDeleteUser],
     mutationFn: userService.deleteUser,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: [MutationKeyGetAllUser] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [MutationKeyGetAllUser],
+      });
     },
   });
 };

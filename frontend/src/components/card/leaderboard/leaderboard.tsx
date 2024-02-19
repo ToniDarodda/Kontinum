@@ -49,7 +49,7 @@ export function Leaderboard() {
       <Wrapper fd={"row"} justifyContent={"space-between"} w={"100%"}>
         {leaderboard.map((s, index) => {
           return (
-            <LeaderboardInfo backgroundColor={applyColor(index)}>
+            <LeaderboardInfo key={s.id} backgroundColor={applyColor(index)}>
               <MultiSubContainer margin={"30px"} justifyContent={"center"}>
                 <KontinumP>
                   {s.firstName} {s.lastName}

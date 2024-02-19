@@ -19,8 +19,10 @@ export const useCreateStock = () => {
   return useMutation({
     mutationKey: [MutationKeyCreateStock],
     mutationFn: stockService.createStock,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: [MutationKeyGetAllStock] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [MutationKeyGetAllStock],
+      });
     },
   });
 };
@@ -44,8 +46,10 @@ export const usePatchStock = () => {
     mutationKey: [MutationKeyPatchStock],
     mutationFn: (params: { id: string; patchData: PatchStockType }) =>
       stockService.patchStock(params.id, params.patchData),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: [MutationKeyGetAllStock] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [MutationKeyGetAllStock],
+      });
     },
   });
 };
@@ -56,8 +60,10 @@ export const useDeleteStock = () => {
   return useMutation({
     mutationKey: [MutationKeyDeleteStock],
     mutationFn: stockService.deleteStock,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: [MutationKeyGetAllStock] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [MutationKeyGetAllStock],
+      });
     },
   });
 };

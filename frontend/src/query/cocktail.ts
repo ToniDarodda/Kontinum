@@ -15,8 +15,10 @@ export const useCreateCocktail = () => {
   return useMutation({
     mutationKey: [MutationKeyCreateCocktail],
     mutationFn: cocktailService.createCocktail,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: [MutationKeyGetAllCocktail] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [MutationKeyGetAllCocktail],
+      });
     },
   });
 };
@@ -42,8 +44,10 @@ export const usePatchCocktail = () => {
       cocktailId: string;
       patchData: PatchCocktailType;
     }) => cocktailService.patchCocktail(params.cocktailId, params.patchData),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: [MutationKeyGetAllCocktail] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [MutationKeyGetAllCocktail],
+      });
     },
   });
 };
@@ -54,8 +58,10 @@ export const useDeleteCocktail = () => {
   return useMutation({
     mutationKey: [MutationKeyDeleteCocktail],
     mutationFn: cocktailService.deleteCocktail,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: [MutationKeyGetAllCocktail] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [MutationKeyGetAllCocktail],
+      });
     },
   });
 };

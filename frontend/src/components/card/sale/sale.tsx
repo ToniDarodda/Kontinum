@@ -32,7 +32,7 @@ export function Sale() {
     >
       {sale.map((s) => {
         return (
-          <SaleCard>
+          <SaleCard key={s.time}>
             <MultiSubContainer margin={"20px"} gap={"20px"}>
               <KontinumP color={"#ffffff"}>{s.name}</KontinumP>
               <KontinumP color={"#ffffff"} opacity={0.4} fs={"14px"}>

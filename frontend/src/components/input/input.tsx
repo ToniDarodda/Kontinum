@@ -8,6 +8,7 @@ interface InputInterface {
   type?: string;
 }
 
+// eslint-disable-next-line react/display-name
 export const Input = React.forwardRef<HTMLInputElement, InputInterface>(
   ({ placeholder, inputLabel, type, ...rest }, ref) => {
     return (
