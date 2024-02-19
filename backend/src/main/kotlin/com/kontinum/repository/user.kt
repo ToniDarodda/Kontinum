@@ -1,19 +1,18 @@
 package com.kontinum.repository
 
 import com.kontinum.model.User
-import com.kontinum.service.user.dto.UserCreateDTO
+import com.kontinum.service.user.dto.*
 import com.kontinum.service.user.UserService
-import com.kontinum.service.user.dto.UserPatchDTO
 
 class UserRepositoryImpl(private val userService: UserService) {
-    suspend fun registerUser(data: UserCreateDTO): User? {
-        return userService.createUser(data)
+    suspend fun registerUser(data: UserCreateDTO, businessId: Int): User? {
+        return userService.createUser(data, businessId)
     }
 
     suspend fun loginUser() {}
 
-    suspend fun getAllUSer(): List<User> {
-        return userService.getUsers()
+    suspend fun getAllUSer(businessId: Int): List<User> {
+        return userService.getUsers(businessId)
     }
 
     suspend fun getUserById(userId: Int): User? {

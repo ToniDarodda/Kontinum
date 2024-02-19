@@ -1,8 +1,7 @@
 package com.kontinum.service.purchase
 
 import com.kontinum.model.purchase.Purchase
-import com.kontinum.service.purchase.dto.PurchaseCreateDTO
-import com.kontinum.service.purchase.dto.PurchasePatchDTO
+import com.kontinum.service.purchase.dto.*
 
 interface PurchaseInterface {
     suspend fun createPurchase(data: PurchaseCreateDTO): Purchase?

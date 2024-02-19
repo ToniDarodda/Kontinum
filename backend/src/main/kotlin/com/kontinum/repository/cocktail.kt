@@ -2,16 +2,19 @@ package com.kontinum.repository
 
 import com.kontinum.model.Cocktail
 import com.kontinum.service.cocktail.CocktailService
-import com.kontinum.service.cocktail.dto.CocktailCreateDTO
-import com.kontinum.service.cocktail.dto.CocktailPatchDTO
+import com.kontinum.service.cocktail.dto.*
 
 class CocktailRepositoryImpl(private val cocktailService: CocktailService) {
-    suspend fun createCocktail(data: CocktailCreateDTO): Cocktail? {
-        return this.cocktailService.createCocktail(data)
+    suspend fun createCocktail(data: CocktailCreateDTO, businessId: Int): Cocktail? {
+        return this.cocktailService.createCocktail(data, businessId)
     }
 
-    suspend fun getCocktails(): List<Cocktail> {
-        return this.cocktailService.getCocktails()
+    suspend fun isCocktailNameExist(cocktailName: String): Boolean {
+        return this.cocktailService.isCocktailNameExist(cocktailName)
+    }
+
+    suspend fun getCocktails(businessId: Int): List<Cocktail> {
+        return this.cocktailService.getCocktails(businessId)
     }
 
     suspend fun getCocktail(cocktailId: Int): Cocktail? {

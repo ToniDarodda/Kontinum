@@ -2,8 +2,7 @@ package com.kontinum.service.stock
 
 import com.kontinum.model.Stock
 import com.kontinum.model.Stocks
-import com.kontinum.service.stock.dto.StockCreateDTO
-import com.kontinum.service.stock.dto.StockPatchDTO
+import com.kontinum.service.stock.dto.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -14,11 +13,12 @@ class StockService : StockInterface {
         capacity = row[Stocks.capacity],
         cocktailId = row[Stocks.cocktailId]
     )
-    override suspend fun createStock(data: StockCreateDTO): Stock? {
+    override suspend fun createStock(data: StockCreateDTO, businessId: Int): Stock? {
         return transaction {
             val createdStock = Stocks.insert {
                 it[capacity] = data.capacity
                 it[cocktailId] = data.cocktailId
+                it[this.businessId] = businessId
             }
 
             createdStock.resultedValues?.singleOrNull()?.let(::stockToRow)
@@ -30,9 +30,9 @@ class StockService : StockInterface {
             retrievedStock.singleOrNull()?.let(::stockToRow)
         }
     }
-    override suspend fun getStocks(): List<Stock> {
+    override suspend fun getStocks(businessId: Int): List<Stock> {
         return transaction {
-            val retrievedStocks = Stocks.selectAll()
+            val retrievedStocks = Stocks.selectAll().where { Stocks.businessId eq businessId}
 
             retrievedStocks.map(::stockToRow)
         }

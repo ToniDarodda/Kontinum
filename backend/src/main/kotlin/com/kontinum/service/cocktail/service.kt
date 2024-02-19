@@ -2,8 +2,7 @@ package com.kontinum.service.cocktail
 
 import com.kontinum.model.Cocktail
 import com.kontinum.model.Cocktails
-import com.kontinum.service.cocktail.dto.CocktailCreateDTO
-import com.kontinum.service.cocktail.dto.CocktailPatchDTO
+import com.kontinum.service.cocktail.dto.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -13,14 +12,26 @@ class CocktailService : CocktailInterface {
     private fun cocktailToRow(row: ResultRow) = Cocktail(
         id = row[Cocktails.id],
         name = row[Cocktails.name],
-        pricePerGlass = row[Cocktails.pricePerServing]
+        pricePerGlass = row[Cocktails.pricePerServing],
+        businessId = row[Cocktails.businessId]
     )
 
-    override suspend fun createCocktail(data: CocktailCreateDTO): Cocktail? {
+    suspend fun isCocktailNameExist(cocktailName: String): Boolean {
+        val retrievedCocktail = transaction {
+            val rCocktail = Cocktails.selectAll().where { Cocktails.name eq cocktailName }
+
+            rCocktail.singleOrNull()?.let(::cocktailToRow)
+        }
+
+        return retrievedCocktail != null;
+    }
+
+    override suspend fun createCocktail(data: CocktailCreateDTO, businessId: Int): Cocktail? {
         return transaction {
             val createdCocktail = Cocktails.insert {
                 it[name] = data.name
                 it[pricePerServing] = data.pricePerServing
+                it[this.businessId] = businessId
             }
 
             createdCocktail.resultedValues?.singleOrNull()?.let(::cocktailToRow)
@@ -35,9 +46,9 @@ class CocktailService : CocktailInterface {
         }
     }
 
-    override suspend fun getCocktails(): List<Cocktail> {
+    override suspend fun getCocktails(businessId: Int): List<Cocktail> {
         return transaction {
-            val retrievedCocktails = Cocktails.selectAll()
+            val retrievedCocktails = Cocktails.selectAll().where { Cocktails.businessId eq businessId }
 
             retrievedCocktails.map(::cocktailToRow)
         }

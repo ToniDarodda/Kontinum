@@ -1,2 +1,2 @@
-export * as Navbar from './navbar/navbar'
-export * from './image/image'
+export * from "./navbar/navbar";
+export * from "./image/image";

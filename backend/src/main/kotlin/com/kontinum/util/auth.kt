@@ -7,15 +7,10 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 
-fun Application.auth() {
-    val secret = "Z+MU@YqP+jwXVf&jQ&U#((q7V5tWc(a^n6H)7MVUNDdaNp7QeUHd^)@hCLSW+"
-    val issuer = "http://localhost:8080"
-    val audience = "Kontinum"
-    val myRealm = "Kontinum"
+fun Application.auth(secret: String, issuer: String) {
 
     install(Authentication) {
         jwt("auth-jwt") {
-            realm = myRealm
             val jwtAlgorithm = Algorithm.HMAC256(secret)
             verifier(JWT.require(jwtAlgorithm).withIssuer(issuer).build())
 

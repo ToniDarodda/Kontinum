@@ -1,5 +1,5 @@
+import { KontinumButton } from "../button/button.style";
+
 export function toast() {
-    return (
-        <></>
-    )
+  return <KontinumButton></KontinumButton>;
 }
